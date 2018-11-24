@@ -19,6 +19,12 @@ class UserDAO:
 
     def get_by_id(self, id):
         logger.info('[userDAO] Getting user by chat_id: ' + str(id))
-        users = self._db.users
-        r = users.find({"chat_id": id})
+        collection = self._db.users
+        r = collection.find({"chat_id": id})
+        return r
+
+    def enabled_flow(self, id, flow):
+        logger.info(('[userDAO] Enabling flow {0} by chat_id: '.format(flow)) + str(id))
+        collection = self._db.users
+        r = collection.update_one({"chat_id": id}, {"$set": {"inFlow": True, "flow": flow}}, upsert=False)
         return r
