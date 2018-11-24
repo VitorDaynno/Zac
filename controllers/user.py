@@ -27,6 +27,9 @@ class UserController:
     def enabled_flow(self, flow):
         return self._dao.enabled_flow(self._id, flow)
 
+    def get_in_flow(self):
+        return self._dao.get_in_flow(self._id)
+
     def get_id(self):
         return self._id
 
