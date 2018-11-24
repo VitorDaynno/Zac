@@ -12,6 +12,10 @@ class Config:
         except:
             logger.error('TOKEN_BOT is not found')
             exit()
+        self._db_name = 'zac'
 
     def get_token_bot(self):
         return self._token_bot
+
+    def get_db_name(self):
+        return self._db_name
