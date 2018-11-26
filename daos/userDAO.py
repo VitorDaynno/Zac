@@ -34,3 +34,8 @@ class UserDAO:
         collection = self._db.users
         r = collection.find_one({'chat_id': id})
         return r
+
+    def update_step(self, step_id, usu_id):
+        users = self._db.users
+        r = users.update_one({"chat_id": usu_id}, {"$set": {"flow.stage": step_id}}, upsert=False)
+        return r

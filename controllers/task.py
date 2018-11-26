@@ -5,23 +5,16 @@ import datetime
 
 class TaskController:
 
-    def __init__(self, name, day, hour, usu_id):
-        self._name = name
-        self._day = day
-        self._hour = hour
+    def __init__(self, usu_id):
         self._usu_id = usu_id
         self._dao = TaskDAO()
         self._config = Config()
 
-    def new_task(self, task):
-        return self._dao.new_task(task)
-
-    def get_name(self):
-        return self._name
-
-    def get_date(self):
-        x = datetime.datetime(2002, 10, 27, 6, 0, 0)
-        return x
+    def new_task(self, step, text):
+        if step == 'name':
+            return self._dao.new_task(text, self._usu_id)
+        if step == 'date':
+            return self._dao.update_date(text, self._usu_id)
 
     def get_usu_id(self):
         return self._usu_id

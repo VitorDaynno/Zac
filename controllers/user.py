@@ -30,6 +30,9 @@ class UserController:
     def get_in_flow(self):
         return self._dao.get_in_flow(self._id)
 
+    def update_step(self, step_id):
+            return self._dao.update_step(step_id, self._id)
+
     def get_id(self):
         return self._id
 
