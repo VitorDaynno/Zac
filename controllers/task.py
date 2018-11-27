@@ -15,6 +15,9 @@ class TaskController:
             return self._dao.new_task(text, self._usu_id)
         if step == 'date':
             return self._dao.update_date(text, self._usu_id)
+    
+    def remove_in_process(self):
+        self._dao.remove_in_process(self._usu_id)
 
     def get_usu_id(self):
         return self._usu_id

@@ -15,6 +15,11 @@ class TaskDAO:
         r = tasks.insert_one({"name": name, "usuId": usu_id, "inProcess": True})
         return r
 
+    def update_date(self, date, usu_id):
+        tasks = self._db.tasks
+        r = tasks.update_one({"usuId": usu_id, "inProcess": True}, {"$set": {"date": date}}, upsert=False)
+        return r
+
     def get_tasks(self, id):
         tasks = self._db.tasks
         tasks = tasks.find({"usuId": id})
