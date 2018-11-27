@@ -21,11 +21,12 @@ def init(message):
 @bot.message_handler(func=lambda m: True)
 def talking(message):
     chat_id = message.from_user.id
+    print(message)
     user = UserController(chat_id)
     user.set_name(message.from_user.first_name)
 
     r = user.get_in_flow()
-    if r['inFlow']:
+    if 'inFlow' in r:
         flow = FlowController(r['flow'], message, chat_id)
         flow.execute_step()
         next_step = flow.get_next_step()

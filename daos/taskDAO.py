@@ -20,6 +20,11 @@ class TaskDAO:
         r = tasks.update_one({"usuId": usu_id, "inProcess": True}, {"$set": {"date": date}}, upsert=False)
         return r
 
+    def disable_in_process(self, usu_id):
+        collection = self._db.tasks
+        r = collection.update_one({"usuId": usu_id, "inProcess": True}, {"$set": {"inProcess": False}}, upsert=False)
+        return r
+
     def get_tasks(self, id):
         tasks = self._db.tasks
         tasks = tasks.find({"usuId": id})

@@ -23,8 +23,8 @@ class UserDAO:
         r = collection.find({"chat_id": id})
         return r
 
-    def enabled_flow(self, id, flow):
-        logger.info(('[userDAO] Enabling flow {0} by chat_id: '.format(flow)) + str(id))
+    def enable_flow(self, id, flow):
+        logger.info('[userDAO] Enabling flow {0} by chat_id: {1}'.format(flow, id))
         collection = self._db.users
         r = collection.update_one({"chat_id": id}, {"$set": {"inFlow": True, "flow": flow}}, upsert=False)
         return r
@@ -33,6 +33,18 @@ class UserDAO:
         logger.info('[userDAO] Getting flow by chat_id: ' + str(id))
         collection = self._db.users
         r = collection.find_one({'chat_id': id})
+        return r
+
+    def disable_in_flow(self, id):
+        logger.info('[userDAO] Disabling in_flow by chat_id: ' + str(id))
+        collection = self._db.users
+        r = collection.update_one({"chat_id": id}, {"$set": {"inFlow": False}}, upsert=False)
+        return r
+
+    def remove_flow(self, id):
+        logger.info('[userDAO] Remove flow by chat_id: ' + str(id))
+        collection = self._db.users
+        r = collection.update_one({"chat_id": id}, {"$unset": {"flow": 1}}, upsert=False)
         return r
 
     def update_step(self, step_id, usu_id):

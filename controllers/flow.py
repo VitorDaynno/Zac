@@ -20,8 +20,12 @@ class FlowController:
             task.new_task('name', self._message.text)
         elif self._type == 'newTask' and self._status == 1:
             task = TaskController(self._usu_id)
-            r = task.new_task('date', self._message.text)
-            task.remove_in_process(r)
+            user = UserController(self._usu_id)
+
+            task.new_task('date', self._message.text)
+            task.disable_in_process()
+            user.disable_in_flow()
+            user.remove_flow()
 
     def get_next_step(self):
         logger.info('[FlowController] Getting a next step by flow: ' + self._type)
