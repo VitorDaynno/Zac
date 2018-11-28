@@ -13,7 +13,7 @@ def init(message):
     if r:
         bot.send_message(user.get_id(), 'Oi ' + user.get_name() + '.')
         bot.send_message(user.get_id(), 'Meu nome é Zac, sou um bot com a função de ajudar a se lembrar de realizar suas tarefas')
-        bot.send_message(user.get_id(), 'você pode iniciar uma nova tarefa digitando /newTasks')
+        bot.send_message(user.get_id(), 'você pode iniciar uma nova tarefa digitando /newTask')
     else:
         bot.send_message(user.get_id(), user.get_name() + ', nós já nos conhecemos, não precisa disso né?! Hehehe')
 
@@ -21,7 +21,6 @@ def init(message):
 @bot.message_handler(func=lambda m: True)
 def talking(message):
     chat_id = message.from_user.id
-    print(message)
     user = UserController(chat_id)
     user.set_name(message.from_user.first_name)
 

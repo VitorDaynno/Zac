@@ -14,7 +14,11 @@ class TaskController:
         if step == 'name':
             return self._dao.new_task(text, self._usu_id)
         if step == 'date':
-            return self._dao.update_date(text, self._usu_id)
+            splitText = text.split(' ')
+            date = splitText[0].split('/')
+            hour = splitText[1].split(':')
+            new_date = datetime.datetime(int(date[2]), int(date[1]), int(date[0]), int(hour[0]), int(hour[1]), int(hour[2]))
+            return self._dao.update_date(new_date, self._usu_id)
 
     def disable_in_process(self):
         self._dao.disable_in_process(self._usu_id)
