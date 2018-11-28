@@ -25,7 +25,7 @@ class TaskDAO:
         r = collection.update_one({"usuId": usu_id, "inProcess": True}, {"$set": {"inProcess": False}}, upsert=False)
         return r
 
-    def get_tasks(self, id):
+    def get_tasks(self, filter):
         tasks = self._db.tasks
-        tasks = tasks.find({"usuId": id})
+        tasks = tasks.find(filter)
         return tasks

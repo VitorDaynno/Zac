@@ -27,7 +27,10 @@ def talking(message):
     r = user.get_in_flow()
     if 'inFlow' in r:
         flow = FlowController(r['flow'], message, chat_id)
-        flow.execute_step()
-        next_step = flow.get_next_step()
-        flow.update_step(next_step["nextStatus"])
-        bot.send_message(user.get_id(), next_step['phrase'])
+        r = flow.execute_step()
+        if r is True:
+                next_step = flow.get_next_step()
+                flow.update_step(next_step["nextStatus"])
+                bot.send_message(user.get_id(), next_step['phrase'])
+        else:
+                bot.send_message(user.get_id(), r['message'])

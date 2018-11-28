@@ -26,5 +26,8 @@ class TaskController:
     def get_usu_id(self):
         return self._usu_id
 
-    def get_tasks(self):
-        return self._dao.get_tasks(self._usu_id)
+    def get_tasks(self, filter):
+        filters = {'usuId': self._usu_id}
+        if 'date' in filter:
+            filters["date"] = filter["date"]
+        return self._dao.get_tasks(filters)

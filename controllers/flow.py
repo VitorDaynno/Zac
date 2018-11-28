@@ -18,14 +18,19 @@ class FlowController:
         if self._type == 'newTask' and self._status == 0:
             task = TaskController(self._usu_id)
             task.new_task('name', self._message.text)
+            return True
         elif self._type == 'newTask' and self._status == 1:
-            task = TaskController(self._usu_id)
-            user = UserController(self._usu_id)
+            try:
+                task = TaskController(self._usu_id)
+                user = UserController(self._usu_id)
 
-            task.new_task('date', self._message.text)
-            task.disable_in_process()
-            user.disable_in_flow()
-            user.remove_flow()
+                task.new_task('date', self._message.text)
+                task.disable_in_process()
+                user.disable_in_flow()
+                user.remove_flow()
+                return True
+            except:
+                return {'message': 'Essa não parece um data válida'} 
 
     def get_next_step(self):
         logger.info('[FlowController] Getting a next step by flow: ' + self._type)

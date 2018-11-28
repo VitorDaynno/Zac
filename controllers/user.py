@@ -47,3 +47,6 @@ class UserController:
 
     def set_name(self, name):
         self._name = name
+        
+    def get_users(self):
+        return self._dao.get_users()
