@@ -11,7 +11,6 @@ class Config:
             logger.info('Token bot getting by environment variable: ' + self._token_bot)
         except:
             logger.error('TOKEN_BOT is not found')
-            exit()
         self._db_name = 'zac'
 
     def get_token_bot(self):
