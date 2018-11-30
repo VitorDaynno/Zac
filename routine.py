@@ -14,7 +14,10 @@ def rememberTask():
     for user in users:
         task_controller = TaskController(user['chat_id'])
         now = datetime.datetime.now()
-        initial_date = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, 0)        
+        initial_date = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, 0)
+        minute = now.minute
+        if minute < 60:
+            minute = minute + 1       
         final_date = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1)
         filter = {"date": {"$gte": initial_date, "$lt": final_date}}
         tasks = task_controller.get_tasks(filter)
