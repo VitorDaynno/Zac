@@ -8,7 +8,7 @@ class UserDAO:
 
     def __init__(self):
         self._config = Config()
-        self._client = MongoClient()
+        self._client = MongoClient(self._config.get_db_server(), 27017)
         self._db = self._client[self._config.get_db_name()]
 
     def new_user(self, user):

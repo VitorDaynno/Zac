@@ -7,7 +7,7 @@ class FlowDAO:
 
     def __init__(self):
         self._config = Config()
-        self._client = MongoClient()
+        self._client = MongoClient(self._config.get_db_server(), 27017)
         self._db = self._client[self._config.get_db_name()]
 
     def get_next_step(self, flow_type, status):
