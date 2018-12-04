@@ -16,9 +16,9 @@ def rememberTask():
         now = datetime.datetime.now()
         initial_date = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, 0)
         minute = now.minute
-        if minute < 60:
-            minute = minute + 1       
-        final_date = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute + 1)
+        if minute < 59:
+            minute = minute + 1
+        final_date = datetime.datetime(now.year, now.month, now.day, now.hour, minute)
         filter = {"date": {"$gte": initial_date, "$lt": final_date}}
         tasks = task_controller.get_tasks(filter)
         for task in tasks:
