@@ -31,3 +31,6 @@ class TaskController:
         if 'date' in filter:
             filters["date"] = filter["date"]
         return self._dao.get_tasks(filters)
+    
+    def close_connection(self):
+        self._dao.close_connection()

@@ -15,3 +15,6 @@ class FlowDAO:
         collection = self._db.stages
         r = collection.find_one({"status": status, "flowType": flow_type})
         return r
+
+    def close_connection(self):
+        self._client.close()

@@ -18,6 +18,7 @@ class FlowController:
         if self._type == 'newTask' and self._status == 0:
             task = TaskController(self._usu_id)
             task.new_task('name', self._message.text)
+            task.close_connection()
             return True
         elif self._type == 'newTask' and self._status == 1:
             try:
@@ -28,6 +29,10 @@ class FlowController:
                 task.disable_in_process()
                 user.disable_in_flow()
                 user.remove_flow()
+
+                task.close_connection()
+                user.close_connection()
+
                 return True
             except:
                 return {'message': 'Essa não parece um data válida'} 
@@ -40,3 +45,7 @@ class FlowController:
         logger.info('[FlowController] Updating a step by flow: ' + self._type)
         user = UserController(self._usu_id)
         user.update_step(step_id)
+        user.close_connection()
+
+    def close_connection(self):
+        self._dao.close_connection()

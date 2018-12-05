@@ -29,3 +29,6 @@ class TaskDAO:
         tasks = self._db.tasks
         tasks = tasks.find(filter)
         return tasks
+
+    def close_connection(self):
+        self._client.close()

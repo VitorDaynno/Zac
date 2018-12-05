@@ -51,8 +51,11 @@ class UserDAO:
         users = self._db.users
         r = users.update_one({"chat_id": usu_id}, {"$set": {"flow.stage": step_id}}, upsert=False)
         return r
-    
+
     def get_users(self):
         collection = self._db.users
         r = collection.find({})
         return r
+
+    def close_connection(self):
+        self._client.close()

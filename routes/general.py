@@ -16,6 +16,7 @@ def init(message):
         bot.send_message(user.get_id(), 'você pode iniciar uma nova tarefa digitando /newTask')
     else:
         bot.send_message(user.get_id(), user.get_name() + ', nós já nos conhecemos, não precisa disso né?! Hehehe')
+    user.close_connection()
 
 
 @bot.message_handler(func=lambda m: True)
@@ -34,3 +35,5 @@ def talking(message):
                 bot.send_message(user.get_id(), next_step['phrase'])
         else:
                 bot.send_message(user.get_id(), r['message'])
+    flow.close_connection()
+    user.close_connection()

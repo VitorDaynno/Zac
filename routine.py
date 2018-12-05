@@ -23,6 +23,8 @@ def rememberTask():
         tasks = task_controller.get_tasks(filter)
         for task in tasks:
             bot.send_message(user["chat_id"], 'Está na hora de ' + task["name"])
+        task_controller.close_connection()
+    user_controller.close_connection()
 
 routine = ThreadJob(rememberTask, event, 60)
 routine.start()
