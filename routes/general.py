@@ -1,39 +1,19 @@
-from bot import bot
+from config.logger import logger
 from controllers.user import UserController
-from controllers.flow import FlowController
 
 
-@bot.message_handler(commands=['start'])
-def init(message):
-    chat_id = message.from_user.id
-    user = UserController(chat_id)
-    user.set_name(message.from_user.first_name)
+class General:
 
-    r = user.new_user(user)
-    if r:
-        bot.send_message(user.get_id(), 'Oi ' + user.get_name() + '.')
-        bot.send_message(user.get_id(), 'Meu nome é Zac, sou um bot com a função de ajudar a se lembrar de realizar suas tarefas')
-        bot.send_message(user.get_id(), 'você pode iniciar uma nova tarefa digitando /newTask')
-    else:
-        bot.send_message(user.get_id(), user.get_name() + ', nós já nos conhecemos, não precisa disso né?! Hehehe')
-    user.close_connection()
+    def start(self, bot, update):
+        logger.info('initiating /start')
 
+        chat_id = update.message.chat.id
+        name = update.message.chat.first_name
+        reply = update.message
 
-@bot.message_handler(func=lambda m: True)
-def talking(message):
-    chat_id = message.from_user.id
-    user = UserController(chat_id)
-    user.set_name(message.from_user.first_name)
+        user = UserController(chat_id)
+        user.set_name(name)
 
-    r = user.get_in_flow()
-    if 'inFlow' in r:
-        flow = FlowController(r['flow'], message, chat_id)
-        r = flow.execute_step()
-        if r is True:
-                next_step = flow.get_next_step()
-                flow.update_step(next_step["nextStatus"])
-                bot.send_message(user.get_id(), next_step['phrase'])
-        else:
-                bot.send_message(user.get_id(), r['message'])
-    flow.close_connection()
-    user.close_connection()
+        reply.reply_text('Oi ' + user.get_name() + '.')
+        reply.reply_text('Meu nome é Zac, sou um bot com a função de ajudar a se lembrar de realizar suas tarefas')
+        reply.reply_text('você pode iniciar uma nova tarefa digitando /newTask')

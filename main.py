@@ -1,7 +1,22 @@
-from config.config import Config
-from bot import bot
-import routes.tasks
-import routes.general
-import routine
+from telegram.ext import (Updater, CommandHandler)
 
-bot.polling()
+from config.logger import logger
+from config.config import Config
+from routes.general import General
+
+
+def main():
+    logger.info('Initialize Zac')
+    config = Config()
+    general = General()
+
+    updater = Updater(config.get_token_bot())
+    dp = updater.dispatcher
+
+    dp.add_handler(CommandHandler("start", general.start))
+
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
