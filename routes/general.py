@@ -15,5 +15,7 @@ class General:
         user.set_name(name)
 
         reply.reply_text('Oi ' + user.get_name() + '.')
-        reply.reply_text('Meu nome é Zac, sou um bot com a função de ajudar a se lembrar de realizar suas tarefas')
-        reply.reply_text('você pode iniciar uma nova tarefa digitando /newTask')
+        reply.reply_text(('Meu nome é Zac, sou um bot com a função de ajudar '
+                          'a se lembrar de realizar suas tarefas'))
+        reply.reply_text(('Você pode iniciar uma nova tarefa utilizando'
+                          'o comando /newTask'))
