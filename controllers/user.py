@@ -10,7 +10,7 @@ class UserController:
         self._config = Config()
 
     def new_user(self, user):
-        r = self.get_by_id(user.get_id())
+        r = self.get_by_id(self.get_id())
         if r.count() <= 0:
             r = self._dao.new_user(user)
             if r.inserted_id is not None:

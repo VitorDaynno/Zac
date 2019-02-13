@@ -13,9 +13,13 @@ class General:
 
         user = UserController(chat_id)
         user.set_name(name)
+        r = user.new_user(user)
 
-        reply.reply_text('Oi ' + user.get_name() + '.')
-        reply.reply_text(('Meu nome é Zac, sou um bot com a função de ajudar '
-                          'a se lembrar de realizar suas tarefas'))
-        reply.reply_text(('Você pode iniciar uma nova tarefa utilizando'
-                          'o comando /newTask'))
+        if r:
+            reply.reply_text('Oi ' + user.get_name() + '.')
+            reply.reply_text(('Meu nome é Zac, sou um bot com a função de '
+                              'ajudar a se lembrar de realizar suas tarefas'))
+            reply.reply_text(('Você pode iniciar uma nova tarefa utilizando '
+                              'o comando /newTask'))
+        else:
+            reply.reply_text('Creio que já nos conhecemos')
