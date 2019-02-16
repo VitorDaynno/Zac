@@ -6,23 +6,24 @@ class Config:
 
     def __init__(self):
         logger.info('Initializing configs')
-        self._token_bot = os.getenv('TOKEN_BOT')
-        self._db_server = os.getenv('DB_SERVER')
-        self._db_name = os.getenv('DB_NAME')
-        try:
-            logger.info('Token bot getting by environment variable: ' + self._token_bot)
-        except:
-            logger.error('TOKEN_BOT is not found')
-        if self._db_server is None:
-            self._db_server = 'localhost'
-        if self._db_name is None:
-            self._db_name = 'zac'
 
     def get_token_bot(self):
+        self._token_bot = os.getenv('TOKEN_BOT')
+        try:
+            logger.info(('Token bot getting by environment'
+                         ' variable: ' + self._token_bot))
+        except:
+            logger.error('TOKEN_BOT is not found')
         return self._token_bot
 
     def get_db_name(self):
+        self._db_name = os.getenv('DB_NAME')
+        if self._db_name is None:
+            self._db_name = 'zac'
         return self._db_name
 
     def get_db_server(self):
+        self._db_server = os.getenv('DB_SERVER')
+        if self._db_server is None:
+            self._db_server = 'localhost'
         return self._db_server

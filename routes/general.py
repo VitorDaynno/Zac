@@ -22,4 +22,4 @@ class General:
             reply.reply_text(('Você pode iniciar uma nova tarefa utilizando '
                               'o comando /newTask'))
         else:
-            reply.reply_text('Creio que já nos conhecemos')
+            reply.reply_text('A gente já se conhece kekeke')
