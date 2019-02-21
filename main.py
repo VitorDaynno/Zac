@@ -5,7 +5,7 @@ from config.logger import logger
 from config.config import Config
 from routes.general import General
 from routes.tasks import Task
-
+import routine
 
 def main():
     logger.info('Initialize Zac')

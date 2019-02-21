@@ -3,15 +3,18 @@ from pytz import timezone
 import pytz
 
 from daos.taskDAO import TaskDAO
+from config.logger import logger
 
 
 class TaskController:
 
     def __init__(self, usu_id):
+        logger.info("Initialize TaskController")
         self._usu_id = usu_id
         self._dao = TaskDAO()
 
     def save_task(self, task):
+        logger.info("Saving task '" + str(task) + "'")
         self.task = {}
         self.task["name"] = task["name"]
 
@@ -24,11 +27,14 @@ class TaskController:
         self.task["usuId"] = self._usu_id
 
         self._dao.save_task(self.task)
+        self.close_connection()
 
     def get_usu_id(self):
+        logger.info("Getting usu_id")
         return self._usu_id
 
     def get_tasks(self, filter):
+        logger.info("Getting tasks by usu_id: " + str(self._usu_id))
         filters = {'usuId': self._usu_id}
         if 'date' in filter:
             filters["date"] = filter["date"]
@@ -39,4 +45,5 @@ class TaskController:
         return tz.normalize(tz.localize(date)).astimezone(pytz.utc)
 
     def close_connection(self):
+        logger.info("Closing connection to databases")
         self._dao.close_connection()
