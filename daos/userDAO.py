@@ -14,7 +14,10 @@ class UserDAO:
     def new_user(self, user):
         logger.info('[userDAO] Creating a new user')
         collection = self._db.users
-        r = collection.insert_one({"chat_id": user.get_id(), "name": user.get_name(), "createdDate": datetime.datetime.now()})
+        userEntity = {"chat_id": user.get_id(),
+                      "name": user.get_name(),
+                      "createdDate": datetime.datetime.now()}
+        r = collection.insert_one(userEntity)
         return r
 
     def get_by_id(self, id):
