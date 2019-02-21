@@ -2,11 +2,14 @@ from datetime import datetime, timedelta
 from pytz import timezone
 import pytz
 
+from daos.taskDAO import TaskDAO
+
 
 class TaskController:
 
     def __init__(self, usu_id):
         self._usu_id = usu_id
+        self._dao = TaskDAO()
 
     def save_task(self, task):
         self.task = {}
@@ -17,7 +20,10 @@ class TaskController:
         new_date = datetime(int(date[2]), int(date[1]), int(date[0]),
                             int(hour[0]), int(hour[1]), int(hour[2]))
 
-        self.task['date'] = self._to_UTC(new_date)
+        self.task["date"] = self._to_UTC(new_date)
+        self.task["usuId"] = self._usu_id
+
+        self._dao.save_task(self.task)
 
     def get_usu_id(self):
         return self._usu_id
