@@ -5,7 +5,8 @@ from config.logger import logger
 from config.config import Config
 from routes.general import General
 from routes.tasks import Task
-import routine
+from routine import Routine
+
 
 def main():
     logger.info('Initialize Zac')
@@ -15,6 +16,9 @@ def main():
 
     updater = Updater(config.get_token_bot(), use_context=True)
     dp = updater.dispatcher
+
+    routine = Routine(updater.bot)
+    routine.start(60)
 
     dp.add_handler(CommandHandler("start", general.start))
 

@@ -1,30 +1,38 @@
 import threading
-import datetime
+from datetime import datetime
 from helpers.threadJob import ThreadJob
-from bot import bot
+
 from controllers.task import TaskController
 from controllers.user import UserController
 
-event = threading.Event()
 
+class Routine:
 
-def rememberTask():
-    user_controller = UserController(None)
-    users = user_controller.get_users()
-    for user in users:
-        task_controller = TaskController(user['chat_id'])
-        now = datetime.datetime.utcnow()
-        initial_date = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, 0)
-        minute = now.minute
-        if minute < 59:
-            minute = minute + 1
-        final_date = datetime.datetime(now.year, now.month, now.day, now.hour, minute)
-        filter = {"date": {"$gte": initial_date, "$lt": final_date}}
-        tasks = task_controller.get_tasks(filter)
-        for task in tasks:
-            bot.send_message(user["chat_id"], 'Está na hora de ' + task["name"])
-        task_controller.close_connection()
-    user_controller.close_connection()
+    def __init__(self, bot):
+        self.event = threading.Event()
+        self.bot = bot
 
-routine = ThreadJob(rememberTask, event, 60)
-routine.start()
+    def start(self, time):
+        routine = ThreadJob(self.rememberTask, self.event, time)
+        routine.start()
+
+    def rememberTask(self):
+        user_controller = UserController(None)
+        users = user_controller.get_users()
+        for user in users:
+            task_controller = TaskController(user['chat_id'])
+            now = datetime.utcnow()
+            initial_date = datetime(now.year, now.month, now.day, now.hour, 
+                                    now.minute, 0)
+            minute = now.minute
+            if minute < 59:
+                minute = minute + 1
+            final_date = datetime(now.year, now.month, now.day, now.hour,
+                                  minute)
+            filter = {"date": {"$gte": initial_date, "$lt": final_date}}
+            tasks = task_controller.get_tasks(filter)
+            for task in tasks:
+                self.bot.send_message(user["chat_id"], 'Está na hora de ' +
+                                      task["name"])
+            task_controller.close_connection()
+        user_controller.close_connection()
