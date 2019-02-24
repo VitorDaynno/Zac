@@ -21,7 +21,7 @@ class TaskController:
         date = task["date"].split('/')
         hour = task["hour"].split(":")
         new_date = datetime(int(date[2]), int(date[1]), int(date[0]),
-                            int(hour[0]), int(hour[1]), int(hour[2]))
+                            int(hour[0]), int(hour[1]), 0)
 
         self.task["date"] = self._to_UTC(new_date)
         self.task["usuId"] = self._usu_id

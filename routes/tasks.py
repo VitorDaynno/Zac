@@ -1,6 +1,7 @@
 from telegram import (ReplyKeyboardRemove)
 from telegram.ext import (CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
+from datetime import date, timedelta
 
 from config.logger import logger
 from controllers.task import TaskController
@@ -24,7 +25,7 @@ class Task:
 
     def new_task(self, update, context):
         logger.info("Initialize a new task")
-        update.message.reply_text('Opa! Uma nova tarefa, qual será o nome dela?')
+        update.message.reply_text('Opa! Uma nova tarefa, qual o nome dela?')
 
         return NAME
 
@@ -37,7 +38,14 @@ class Task:
 
     def _date(self, update, context):
         logger.info("Getting task's date")
-        self.task["date"] = update.message.text
+        task_date = update.message.text.lower().replace('ã', 'a')
+        if "hoje" in task_date:
+            task_date = date.today()
+            task_date = task_date.strftime("%d/%m/%Y")
+        elif "amanha" in task_date:
+            task_date = date.today() + timedelta(days=1)
+            task_date = task_date.strftime("%d/%m/%Y")
+        self.task["date"] = task_date
         update.message.reply_text('Em qual horário?')
 
         return HOUR
