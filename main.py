@@ -1,10 +1,11 @@
 from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
-from telegram.ext import (Updater, CommandHandler)
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 from config.logger import logger
 from config.config import Config
 from routes.general import General
-from routes.tasks import Task
+from routes.task import Task
+from routes.tasks.completeTask import CompleteTask
 from routine import Routine
 
 
@@ -13,6 +14,7 @@ def main():
     config = Config()
     general = General()
     task = Task()
+    complete_tasks = CompleteTask()
 
     updater = Updater(config.get_token_bot(), use_context=True)
     dp = updater.dispatcher
@@ -21,6 +23,9 @@ def main():
     routine.start(60)
 
     dp.add_handler(CommandHandler("start", general.start))
+    dp.add_handler(CallbackQueryHandler(complete_tasks.completeTask))
+    dp.add_handler(CommandHandler("completeTask",
+                   complete_tasks.tasks))
 
     dp.add_handler(task.get_conv_handler())
 

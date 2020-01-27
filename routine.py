@@ -22,7 +22,7 @@ class Routine:
         for user in users:
             task_controller = TaskController(user['chat_id'])
             now = datetime.utcnow()
-            initial_date = datetime(now.year, now.month, now.day, now.hour, 
+            initial_date = datetime(now.year, now.month, now.day, now.hour,
                                     now.minute, 0)
             minute = now.minute
             if minute < 59:

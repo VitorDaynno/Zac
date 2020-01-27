@@ -1,4 +1,3 @@
-from telegram import (ReplyKeyboardRemove)
 from telegram.ext import (CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
 from datetime import date, timedelta

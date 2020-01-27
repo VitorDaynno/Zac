@@ -1,1 +1,3 @@
 *.pyc
+watchgod_conf.py
+.vscode

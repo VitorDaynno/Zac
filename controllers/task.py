@@ -38,7 +38,9 @@ class TaskController:
         filters = {'usuId': self._usu_id}
         if 'date' in filter:
             filters["date"] = filter["date"]
-        return self._dao.get_tasks(filters)
+        if "isConclude" in filter:
+            filters["isConclude"] = filter["isConclude"]
+        return list(self._dao.get_tasks(filters))
 
     def _to_UTC(self, date):
         tz = timezone('America/Sao_Paulo')
