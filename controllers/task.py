@@ -1,9 +1,8 @@
 from datetime import datetime
-from pytz import timezone
-import pytz
 
 from daos.taskDAO import TaskDAO
 from config.logger import logger
+from helpers.dateHelper import DateHelper
 
 
 class TaskController:
@@ -12,6 +11,7 @@ class TaskController:
         logger.info("Initialize TaskController")
         self.__usu_id = usu_id
         self.__dao = TaskDAO()
+        self.__helper = DateHelper()
 
     def save_task(self, task):
         logger.info("Saving task '" + str(task) + "'")
@@ -23,7 +23,7 @@ class TaskController:
         new_date = datetime(int(date[2]), int(date[1]), int(date[0]),
                             int(hour[0]), int(hour[1]), 0)
 
-        self.task["date"] = self.__to_UTC(new_date)
+        self.task["date"] = self.__helper.to_UTC(new_date)
         self.task["usuId"] = self.__usu_id
         self.task["isConclude"] = False
 
@@ -43,9 +43,7 @@ class TaskController:
             filters["isConclude"] = filter["isConclude"]
         return list(self.__dao.get_tasks(filters))
 
-    def __to_UTC(self, date):
-        tz = timezone('America/Sao_Paulo')
-        return tz.normalize(tz.localize(date)).astimezone(pytz.utc)
+    
 
     def close_connection(self):
         logger.info("Closing connection to databases")
