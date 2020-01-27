@@ -16,21 +16,21 @@ class ConcludeTask:
             now = datetime.utcnow()
             initial_date = datetime(now.year, now.month, now.day, 0, 0, 0)
             final_date = datetime(now.year, now.month, now.day, 23, 59, 59)
-            filter = {
+            search_filter = {
                 "date": {
                     "$gte": initial_date,
                     "$lt": final_date
                 },
                 "isConclude": False
             }
-            tasks = taskController.get_tasks(filter)
+            tasks = taskController.get_tasks(search_filter)
             keyboard = []
 
             if len(list(tasks)) > 0:
                 for task in tasks:
-                    id = str(task["_id"])
+                    task_id = str(task["_id"])
                     name = task["name"]
-                    response = id + ";" + name
+                    response = task_id + ";" + name
                     line = InlineKeyboardButton(name, callback_data=response)
                     keyboard.append([line])
                 reply_markup = InlineKeyboardMarkup(keyboard)
@@ -42,13 +42,14 @@ class ConcludeTask:
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
 
+    @classmethod
     def conclude_task(self, update, context):
         try:
             task_controller = TaskController(None)
             query = update.callback_query
             data = query.data
-            id, name = data.split(";")
-            task_controller.conclude_task(id)
+            task_id, name = data.split(";")
+            task_controller.conclude_task(task_id)
             query.edit_message_text(
                 text="{0} concluída com sucesso".format(name)
             )

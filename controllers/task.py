@@ -43,8 +43,6 @@ class TaskController:
             filters["isConclude"] = filter["isConclude"]
         return list(self.__dao.get_tasks(filters))
 
-    
-
     def close_connection(self):
         logger.info("Closing connection to databases")
         self.__dao.close_connection()

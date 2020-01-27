@@ -22,6 +22,7 @@ class Task:
             fallbacks=[CommandHandler('cancel', self.cancel)]
         )
 
+    @classmethod
     def new_task(self, update, context):
         logger.info("Initialize a new task")
         update.message.reply_text('Opa! Uma nova tarefa, qual o nome dela?')
@@ -63,6 +64,7 @@ class Task:
 
     def cancel(self, update, context):
         logger.info("Cancelling the task")
+        self.task = {}
         update.message.reply_text("Sua tarefa foi cancelada :(")
 
         return ConversationHandler.END

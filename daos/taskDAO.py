@@ -25,7 +25,10 @@ class TaskDAO:
     def close_connection(self):
         self._client.close()
 
-    def conclude_task(self, id):
-        logger.info("Conclude task {0}".format(id))
+    def conclude_task(self, task_id):
+        logger.info("Conclude task {0}".format(task_id))
         tasks = self._db.tasks
-        tasks.update_one({"_id": ObjectId(id)}, {"$set": {"isConclude": True}})
+        tasks.update_one(
+            {"_id": ObjectId(task_id)},
+            {"$set": {"isConclude": True}}
+        )
