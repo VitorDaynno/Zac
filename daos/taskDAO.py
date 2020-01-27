@@ -1,4 +1,6 @@
 from pymongo import MongoClient
+from bson.objectid import ObjectId
+
 from config.config import Config
 from config.logger import logger
 
@@ -22,3 +24,8 @@ class TaskDAO:
 
     def close_connection(self):
         self._client.close()
+
+    def conclude_task(self, id):
+        logger.info("Conclude task {0}".format(id))
+        tasks = self._db.tasks
+        tasks.update_one({"_id": ObjectId(id)}, {"$set": {"isConclude": True}})

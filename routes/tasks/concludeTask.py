@@ -5,11 +5,11 @@ from config.logger import logger
 from controllers.task import TaskController
 
 
-class CompleteTask:
+class ConcludeTask:
 
     def tasks(self, update, context):
         try:
-            logger.info('initiating /completeTasks')
+            logger.info('initiating /concludeTasks')
 
             chat_id = update.message.chat.id
             taskController = TaskController(chat_id)
@@ -37,12 +37,20 @@ class CompleteTask:
                 update.message.reply_text('Qual tarefa deseja concluir?',
                                           reply_markup=reply_markup)
             else:
-                update.message.reply_text('Não existem tarefas a serem concluídas')
+                update.message.reply_text(
+                    "Não existem tarefas a serem concluídas")
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
 
-    def completeTask(self, update, context):
-        query = update.callback_query
-        data = query.data
-        id, name = data.split(";")
-        query.edit_message_text(text="{0} concluída com sucesso".format(name))
+    def conclude_task(self, update, context):
+        try:
+            task_controller = TaskController(None)
+            query = update.callback_query
+            data = query.data
+            id, name = data.split(";")
+            task_controller.conclude_task(id)
+            query.edit_message_text(
+                text="{0} concluída com sucesso".format(name)
+            )
+        except Exception as error:
+            logger.error("An error occurred: {0}".format(error))
