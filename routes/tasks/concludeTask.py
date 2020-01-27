@@ -7,6 +7,7 @@ from controllers.task import TaskController
 
 class ConcludeTask:
 
+    @classmethod
     def tasks(self, update, context):
         try:
             logger.info('initiating /concludeTasks')
