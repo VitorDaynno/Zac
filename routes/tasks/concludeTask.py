@@ -1,22 +1,23 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from datetime import datetime
 
 from config.logger import logger
 from controllers.task import TaskController
+from helpers.dateHelper import DateHelper
 
 
 class ConcludeTask:
 
-    @classmethod
+    def __init__(self):
+        self.__date_helper = DateHelper()
+
     def tasks(self, update, context):
         try:
             logger.info('initiating /concludeTasks')
 
             chat_id = update.message.chat.id
             taskController = TaskController(chat_id)
-            now = datetime.utcnow()
-            initial_date = datetime(now.year, now.month, now.day, 0, 0, 0)
-            final_date = datetime(now.year, now.month, now.day, 23, 59, 59)
+            initial_date = self.__date_helper.initial_date()
+            final_date = self.__date_helper.final_date()
             search_filter = {
                 "date": {
                     "$gte": initial_date,
