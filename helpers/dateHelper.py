@@ -1,5 +1,4 @@
-from pytz import timezone
-import pytz
+from pytz import timezone, utc
 from datetime import datetime
 
 
@@ -8,7 +7,7 @@ class DateHelper:
     @staticmethod
     def to_UTC(date):
         tz = timezone('America/Sao_Paulo')
-        return tz.normalize(tz.localize(date)).astimezone(pytz.utc)
+        return tz.normalize(tz.localize(date)).astimezone(utc)
 
     def initial_date(self):
         now = self.get_local_now()
