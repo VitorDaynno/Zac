@@ -32,7 +32,7 @@ class ConcludeTask:
                 for task in tasks:
                     task_id = str(task["_id"])
                     name = task["name"]
-                    response = task_id + ";" + name
+                    response = "concludeTasks" + "§" + task_id + "§" + name
                     line = InlineKeyboardButton(name, callback_data=response)
                     keyboard.append([line])
                 reply_markup = InlineKeyboardMarkup(keyboard)
@@ -50,7 +50,7 @@ class ConcludeTask:
             task_controller = TaskController(None)
             query = update.callback_query
             data = query.data
-            task_id, name = data.split(";")
+            route, task_id, name = data.split("§")
             task_controller.conclude_task(task_id)
             query.edit_message_text(
                 text="{0} concluída com sucesso".format(name)
