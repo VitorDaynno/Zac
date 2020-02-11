@@ -1,9 +1,9 @@
 from telegram.ext import (CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 
 from config.logger import logger
 from controllers.task import TaskController
+from helpers.telegramHelper import TelegramHelper
 
 NAME, DAYS, HOUR, BIO = range(4)
 
@@ -12,6 +12,7 @@ class CreateRoutine:
 
     def __init__(self):
         self.routine = {}
+        self.__telegram_helper = TelegramHelper()
         self.conv_handler = ConversationHandler(
             entry_points=[CommandHandler('newRoutine', self.new_routine)],
             states={
@@ -34,17 +35,22 @@ class CreateRoutine:
             logger.info("Getting routine's name")
             self.routine["name"] = update.message.text
 
-            days_of_week = [
+            buttons = [
                 {"text": 'DOM', "data": 0},
                 {"text": 'SEG', "data": 1},
                 {"text": 'TER', "data": 2},
                 {"text": 'QUA', "data": 3},
                 {"text": 'QUI', "data": 4},
                 {"text": 'SEX', "data": 5},
-                {"text": 'SAB', "data": 6}
+                {"text": 'SAB', "data": 6},
+                {"text": "Continuar", "data": "OK"}
             ]
 
-            reply_markup = self.make_keyboard("createRoutine§", days_of_week)
+            reply_markup = self.__telegram_helper.make_keyboard(
+                "createRoutine§",
+                buttons
+            )
+
             update.message.reply_text('Selecione os dias?',
                                       reply_markup=reply_markup)
 
@@ -52,6 +58,7 @@ class CreateRoutine:
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
 
+    @classmethod
     def __days(self, update, context):
         logger.info("Getting task's days")
         update.message.reply_text('Em qual horário?')
@@ -98,26 +105,8 @@ class CreateRoutine:
                     }
                     items.append(item)
 
-            reply_markup = self.make_keyboard("", items)
+            reply_markup = self.__telegram_helper.make_keyboard("", items)
 
             query.edit_message_reply_markup(reply_markup=reply_markup)
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
-
-    def make_keyboard(self, prefix, items):
-        keyboard = []
-        lines = []
-        for item in items:
-            text, data = item.values()
-            callback = prefix + str(data)
-            button = InlineKeyboardButton(text, callback_data=callback)
-            if len(lines) < 2:
-                lines.append(button)
-            else:
-                keyboard.append(lines)
-                lines = []
-                lines.append(button)
-        if len(lines) != 0:
-            keyboard.append(lines)
-        keyboard_markup = InlineKeyboardMarkup(keyboard)
-        return keyboard_markup

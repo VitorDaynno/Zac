@@ -34,13 +34,13 @@ class TaskController:
         logger.info("Getting usu_id")
         return self.__usu_id
 
-    def get_tasks(self, filter):
+    def get_tasks(self, search_filter):
         logger.info("Getting tasks by usu_id: " + str(self.__usu_id))
         filters = {'usuId': self.__usu_id}
-        if 'date' in filter:
-            filters["date"] = filter["date"]
-        if "isConclude" in filter:
-            filters["isConclude"] = filter["isConclude"]
+        if 'date' in search_filter:
+            filters["date"] = search_filter["date"]
+        if "isConclude" in search_filter:
+            filters["isConclude"] = search_filter["isConclude"]
         return list(self.__dao.get_tasks(filters))
 
     def close_connection(self):

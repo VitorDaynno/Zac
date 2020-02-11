@@ -50,7 +50,12 @@ class ConcludeTask:
             task_controller = TaskController(None)
             query = update.callback_query
             data = query.data
-            route, task_id, name = data.split("§")
+
+            callback = data.split("§")
+
+            task_id = callback[1]
+            name = callback[2]
+
             task_controller.conclude_task(task_id)
             query.edit_message_text(
                 text="{0} concluída com sucesso".format(name)
