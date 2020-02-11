@@ -2,7 +2,6 @@ from telegram.ext import (CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
 
 from config.logger import logger
-from controllers.task import TaskController
 from helpers.telegramHelper import TelegramHelper
 
 NAME, DAYS, HOUR, BIO = range(4)
@@ -17,7 +16,6 @@ class CreateRoutine:
             entry_points=[CommandHandler('newRoutine', self.new_routine)],
             states={
                 NAME: [MessageHandler(Filters.text, self.__name)],
-                DAYS: [MessageHandler(Filters.text, self.__days)],
                 HOUR: [MessageHandler(Filters.text, self.__hour)]
             },
             fallbacks=[CommandHandler('cancel', self.cancel)]
@@ -54,31 +52,21 @@ class CreateRoutine:
             update.message.reply_text('Selecione os dias?',
                                       reply_markup=reply_markup)
 
-            return DAYS
+            return HOUR
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
 
-    @classmethod
-    def __days(self, update, context):
-        logger.info("Getting task's days")
-        update.message.reply_text('Em qual horário?')
-        return HOUR
-
     def __hour(self, update, context):
-        logger.info("Getting task's hour")
-        self.task["hour"] = update.message.text
+        logger.info("Getting routine's hour")
+        self.routine["hour"] = update.message.text
 
-        chat_id = update.message.chat.id
-
-        task = TaskController(chat_id)
-        task.save_task(self.task)
-        update.message.reply_text("Uhu!! A tarefa foi criada")
+        update.message.reply_text("Uhu!! A rotina foi criada!")
 
         return ConversationHandler.END
 
     def cancel(self, update, context):
         logger.info("Cancelling the task")
-        self.task = {}
+        self.routine = {}
         update.message.reply_text("Sua rotina foi cancelada :(")
 
         return ConversationHandler.END
@@ -90,6 +78,10 @@ class CreateRoutine:
         try:
             query = update.callback_query
             clicked = query.data.split("§")[1]
+
+            if clicked == "OK":
+                return self.__confirm_days(update)
+
             items = []
 
             keyboard = query.message.reply_markup.inline_keyboard
@@ -98,7 +90,11 @@ class CreateRoutine:
                     text = day.text
                     data = day.callback_data
                     if data.split("§")[1] == clicked:
-                        text = "({0})".format(text)
+                        if "(" not in text:
+                            text = "({0})".format(text)
+                        else:
+                            text = text.replace("(", "")
+                            text = text.replace(")", "")
                     item = {
                         "text": text,
                         "data": data
@@ -110,3 +106,7 @@ class CreateRoutine:
             query.edit_message_reply_markup(reply_markup=reply_markup)
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
+
+    def __confirm_days(self, update):
+        query = update.callback_query
+        query.message.reply_text("E qual seria o horário?")
