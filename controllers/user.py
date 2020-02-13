@@ -20,8 +20,8 @@ class UserController:
         else:
             return False
 
-    def get_by_id(self, id):
-        users = self.__dao.get_by_id(id)
+    def get_by_id(self, user_id):
+        users = self.__dao.get_by_id(user_id)
         return users
 
     def get_id(self):

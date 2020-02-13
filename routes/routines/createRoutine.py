@@ -3,6 +3,7 @@ from telegram.ext import (CommandHandler, MessageHandler, Filters,
 
 from config.logger import logger
 from helpers.telegramHelper import TelegramHelper
+from controllers.routine import RoutineController
 
 NAME, DAYS, HOUR, BIO = range(4)
 
@@ -12,6 +13,7 @@ class CreateRoutine:
     def __init__(self):
         self.routine = {}
         self.__telegram_helper = TelegramHelper()
+        self.RoutineController = RoutineController
         self.conv_handler = ConversationHandler(
             entry_points=[CommandHandler('newRoutine', self.new_routine)],
             states={
@@ -59,6 +61,11 @@ class CreateRoutine:
     def __hour(self, update, context):
         logger.info("Getting routine's hour")
         self.routine["hour"] = update.message.text
+
+        chat_id = update.message.chat.id
+
+        routine = self.RoutineController(chat_id)
+        routine.save_routine(self.routine)
 
         update.message.reply_text("Uhu!! A rotina foi criada!")
 
@@ -108,5 +115,7 @@ class CreateRoutine:
             logger.error("An error occurred: {0}".format(error))
 
     def __confirm_days(self, update):
+        logger.info("Started confirm days")
         query = update.callback_query
+        self.routine["days"] = []
         query.message.reply_text("E qual seria o horário?")
