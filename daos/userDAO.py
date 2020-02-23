@@ -20,10 +20,10 @@ class UserDAO:
         r = collection.insert_one(userEntity)
         return r
 
-    def get_by_id(self, id):
-        logger.info('Getting user by chat_id: ' + str(id))
+    def get_by_id(self, user_id):
+        logger.info('Getting user by chat_id: ' + str(user_id))
         collection = self._db.users
-        r = collection.find({"chat_id": id})
+        r = collection.find({"chat_id": user_id})
         return r
 
     def get_users(self):

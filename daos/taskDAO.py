@@ -17,9 +17,9 @@ class TaskDAO:
         r = tasks.insert_one(task)
         return r
 
-    def get_tasks(self, filter):
+    def get_tasks(self, search_filter):
         tasks = self._db.tasks
-        tasks = tasks.find(filter)
+        tasks = tasks.find(search_filter)
         return tasks
 
     def close_connection(self):
