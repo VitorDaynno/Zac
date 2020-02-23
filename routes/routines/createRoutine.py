@@ -13,7 +13,7 @@ class CreateRoutine:
     def __init__(self):
         self.routine = {}
         self.__telegram_helper = TelegramHelper()
-        self.RoutineController = RoutineController
+        self.__RoutineController = RoutineController
         self.conv_handler = ConversationHandler(
             entry_points=[CommandHandler('newRoutine', self.new_routine)],
             states={
@@ -33,7 +33,12 @@ class CreateRoutine:
     def __name(self, update, context):
         try:
             logger.info("Getting routine's name")
-            self.routine["name"] = update.message.text
+
+            chat_id = update.message.chat.id
+            name = update.message.text
+
+            routine_controller = self.__RoutineController(chat_id)
+            routine_controller.set_name(name)
 
             buttons = [
                 {"text": 'DOM', "data": 0},
@@ -59,17 +64,29 @@ class CreateRoutine:
             logger.error("An error occurred: {0}".format(error))
 
     def __hour(self, update, context):
-        logger.info("Getting routine's hour")
-        self.routine["hour"] = update.message.text
+        try:
+            logger.info("Getting routine's hour")
 
-        chat_id = update.message.chat.id
+            chat_id = update.message.chat.id
+            hour = update.message.text
 
-        routine = self.RoutineController(chat_id)
-        routine.save_routine(self.routine)
+            routine_controller = self.__RoutineController(chat_id)
+            routine_controller.set_hour(hour)
 
-        update.message.reply_text("Uhu!! A rotina foi criada!")
+            chat_id = update.message.chat.id
 
-        return ConversationHandler.END
+            routine = self.__RoutineController(chat_id)
+            routine.save_routine(self.routine)
+
+            update.message.reply_text("Uhu!! A rotina foi criada!")
+
+            return ConversationHandler.END
+        except Exception as error:
+            logger.error("An error occurred: {0}".format(error))
+            if error.args[0] == "Time is invalid":
+                update.message.reply_text("Tem certeza que isso é um horário?")
+            else:
+                update.message.reply_text("Ish, parece que algo deu errado")
 
     def cancel(self, update, context):
         logger.info("Cancelling the task")
@@ -116,6 +133,23 @@ class CreateRoutine:
 
     def __confirm_days(self, update):
         logger.info("Started confirm days")
+
         query = update.callback_query
-        self.routine["days"] = []
+        message = query.message
+        chat_id = message.chat.id
+        keyboard = message.reply_markup.inline_keyboard
+
+        days = []
+        i = 0
+
+        for line in keyboard:
+            for day in line:
+                text = day.text
+                if "(" in text:
+                    days.append(i)
+                i += 1
+
+        routine_controller = self.__RoutineController(chat_id)
+        routine_controller.set_days(days)
+
         query.message.reply_text("E qual seria o horário?")

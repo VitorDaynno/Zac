@@ -15,7 +15,7 @@ class RoutineDAO:
     def save_routine(self, routine):
         logger.info("Started save routine")
         routines = self._db.routines
-        r = routines.insert_one(routines)
+        r = routines.insert_one(routine)
         return r
 
     def close_connection(self):
