@@ -31,21 +31,24 @@ class Config:
             self.__db_server = "localhost"
         return self.__db_server
 
-    def get_redis_server(self):
+    @staticmethod
+    def get_redis_server():
         logger.info("Getting redis server by config")
         REDIS_SERVER = os.getenv("REDIS_SERVER")
         if REDIS_SERVER is None:
             REDIS_SERVER = "localhost"
         return REDIS_SERVER
 
-    def get_redis_port(self):
+    @staticmethod
+    def get_redis_port():
         logger.info("Getting redis port by config")
         REDIS_PORT = os.getenv("REDIS_PORT")
         if REDIS_PORT is None:
             REDIS_PORT = 6379
         return REDIS_PORT
 
-    def get_redis_db(self):
+    @staticmethod
+    def get_redis_db():
         logger.info("Getting redis db by config")
         REDIS_DB = os.getenv("REDIS_DB")
         if REDIS_DB is None:

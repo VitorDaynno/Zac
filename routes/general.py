@@ -4,6 +4,7 @@ from controllers.user import UserController
 
 class General:
 
+    @classmethod
     def start(self, update, context):
         logger.info('initiating /start')
 
