@@ -3,6 +3,7 @@ from datetime import datetime
 
 from config.logger import logger
 
+
 class DateHelper:
 
     @staticmethod
@@ -43,3 +44,6 @@ class DateHelper:
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
             return False
+
+    def to_str_date(self, datetime, mask="%d/%m/%Y"):
+        return datetime.strftime(mask)

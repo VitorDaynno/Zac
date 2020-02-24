@@ -82,6 +82,15 @@ class RoutineController:
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
 
+    def get_routines(self, search_filter):
+        logger.info("Getting routines by database")
+        routines = self.__dao.get_routines(search_filter)
+        return list(routines)
+
     def close_connection(self):
-        logger.info("Closing connection to databases")
+        logger.info("Closing connection to database")
         self.__dao.close_connection()
+
+    def update_last_created_date(self, routine_id, date):
+        logger.info("Updating date in routine {0}".format(routine_id))
+        self.__dao.update_last_created_date(routine_id, date)

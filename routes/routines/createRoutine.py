@@ -41,13 +41,13 @@ class CreateRoutine:
             routine_controller.set_name(name)
 
             buttons = [
-                {"text": 'DOM', "data": 0},
-                {"text": 'SEG', "data": 1},
-                {"text": 'TER', "data": 2},
-                {"text": 'QUA', "data": 3},
-                {"text": 'QUI', "data": 4},
-                {"text": 'SEX', "data": 5},
-                {"text": 'SAB', "data": 6},
+                {"text": 'DOM', "data": 6},
+                {"text": 'SEG', "data": 0},
+                {"text": 'TER', "data": 1},
+                {"text": 'QUA', "data": 2},
+                {"text": 'QUI', "data": 3},
+                {"text": 'SEX', "data": 4},
+                {"text": 'SAB', "data": 5},
                 {"text": "Continuar", "data": "OK"}
             ]
 
@@ -77,6 +77,7 @@ class CreateRoutine:
 
             routine = self.__RoutineController(chat_id)
             routine.save_routine(self.routine)
+            routine.close_connection()
 
             update.message.reply_text("Uhu!! A rotina foi criada!")
 
@@ -140,14 +141,13 @@ class CreateRoutine:
         keyboard = message.reply_markup.inline_keyboard
 
         days = []
-        i = 0
 
         for line in keyboard:
             for day in line:
                 text = day.text
+                value = day.callback_data.split("§")[1]
                 if "(" in text:
-                    days.append(i)
-                i += 1
+                    days.append(int(value))
 
         routine_controller = self.__RoutineController(chat_id)
         routine_controller.set_days(days)
