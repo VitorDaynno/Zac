@@ -45,5 +45,6 @@ class DateHelper:
             logger.error("An error occurred: {0}".format(error))
             return False
 
+    @staticmethod
     def to_str_date(self, datetime, mask="%d/%m/%Y"):
         return datetime.strftime(mask)
