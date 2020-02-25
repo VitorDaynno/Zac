@@ -32,7 +32,7 @@ class ConcludeTask:
                 for task in tasks:
                     task_id = str(task["_id"])
                     name = task["name"]
-                    response = "concludeTasks" + "§" + task_id + "§" + name
+                    response = "concludeTasks" + "§" + task_id
                     line = InlineKeyboardButton(name, callback_data=response)
                     keyboard.append([line])
                 reply_markup = InlineKeyboardMarkup(keyboard)
@@ -42,6 +42,7 @@ class ConcludeTask:
                 update.message.reply_text(
                     "Não existem tarefas a serem concluídas")
         except Exception as error:
+            print(error)
             logger.error("An error occurred: {0}".format(error))
 
     @classmethod
@@ -54,11 +55,10 @@ class ConcludeTask:
             callback = data.split("§")
 
             task_id = callback[1]
-            name = callback[2]
 
             task_controller.conclude_task(task_id)
             query.edit_message_text(
-                text="{0} concluída com sucesso".format(name)
+                text="Tarefa concluída com sucesso"
             )
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
