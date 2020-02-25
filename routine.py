@@ -16,6 +16,10 @@ class Routine:
         routine = ThreadJob(self.rememberTask, self.event, time)
         routine.start()
 
+    def start_routine(self, function, time):
+        routine = ThreadJob(function, self.event, time)
+        routine.start()
+
     def rememberTask(self):
         user_controller = UserController(None)
         users = user_controller.get_users()
@@ -29,8 +33,8 @@ class Routine:
                 minute = minute + 1
             final_date = datetime(now.year, now.month, now.day, now.hour,
                                   minute)
-            filter = {"date": {"$gte": initial_date, "$lt": final_date}}
-            tasks = task_controller.get_tasks(filter)
+            search_filter = {"date": {"$gte": initial_date, "$lt": final_date}}
+            tasks = task_controller.get_tasks(search_filter)
             for task in tasks:
                 self.bot.send_message(user["chat_id"], 'Está na hora de ' +
                                       task["name"])

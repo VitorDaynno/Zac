@@ -1,6 +1,8 @@
 from pytz import timezone, utc
 from datetime import datetime
 
+from config.logger import logger
+
 
 class DateHelper:
 
@@ -32,3 +34,17 @@ class DateHelper:
     @staticmethod
     def get_timezone():
         return timezone("America/Sao_Paulo")
+
+    @staticmethod
+    def is_valid_time(time):
+        try:
+            time_format = "%H:%M"
+            datetime.strptime(time, time_format)
+            return True
+        except Exception as error:
+            logger.error("An error occurred: {0}".format(error))
+            return False
+
+    @staticmethod
+    def to_str_date(self, datetime, mask="%d/%m/%Y"):
+        return datetime.strftime(mask)
