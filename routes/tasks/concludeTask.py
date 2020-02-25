@@ -42,7 +42,6 @@ class ConcludeTask:
                 update.message.reply_text(
                     "Não existem tarefas a serem concluídas")
         except Exception as error:
-            print(error)
             logger.error("An error occurred: {0}".format(error))
 
     @classmethod
