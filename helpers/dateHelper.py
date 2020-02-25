@@ -46,5 +46,5 @@ class DateHelper:
             return False
 
     @staticmethod
-    def to_str_date(self, datetime, mask="%d/%m/%Y"):
+    def to_str_date(datetime, mask="%d/%m/%Y"):
         return datetime.strftime(mask)
