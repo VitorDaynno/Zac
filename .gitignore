@@ -2,3 +2,4 @@
 watchgod_conf.py
 .vscode
 data/
+*.env

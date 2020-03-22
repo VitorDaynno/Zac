@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 
 from daos.taskDAO import TaskDAO
 from config.logger import logger
@@ -7,11 +8,12 @@ from helpers.dateHelper import DateHelper
 
 class TaskController:
 
-    def __init__(self, usu_id):
+    def __init__(self, user_id, redis_helper):
         logger.info("Initialize TaskController")
-        self.__usu_id = usu_id
+        self.__user_id = user_id
         self.__dao = TaskDAO()
         self.__helper = DateHelper()
+        self.__redis = redis_helper
 
     def save_task(self, task):
         logger.info("Saving task '" + str(task) + "'")
@@ -50,3 +52,15 @@ class TaskController:
     def conclude_task(self, task_id):
         logger.info("Conclude task {0}".format(task_id))
         self.__dao.conclude_task(task_id)
+
+    def set_name(self, name):
+        try:
+            logger.info("Setting name {0}".format(name))
+
+            index = "createTask§{0}".format(self.__user_id)
+            value = json.dumps({"name": name})
+
+            self.__redis.set_value(index, value)
+        except Exception as error:
+            logger.error("An error occurred: {0}".format(error))
+            raise error

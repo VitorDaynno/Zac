@@ -3,21 +3,20 @@ from telegram.ext import (CommandHandler, MessageHandler, Filters,
 from datetime import date, timedelta
 
 from config.logger import logger
-from controllers.task import TaskController
 
 NAME, DATE, HOUR, BIO = range(4)
 
 
-class Task:
+class NewTask:
 
-    def __init__(self):
-        self.task = {}
+    def __init__(self, TaskController):
+        self.TaskController = TaskController
         self.conv_handler = ConversationHandler(
             entry_points=[CommandHandler('newTask', self.new_task)],
             states={
-                NAME: [MessageHandler(Filters.text, self._name)],
-                DATE: [MessageHandler(Filters.text, self._date)],
-                HOUR: [MessageHandler(Filters.text, self._hour)]
+                NAME: [MessageHandler(Filters.text, self.name)],
+                DATE: [MessageHandler(Filters.text, self.date)],
+                HOUR: [MessageHandler(Filters.text, self.hour)]
             },
             fallbacks=[CommandHandler('cancel', self.cancel)]
         )
@@ -29,12 +28,21 @@ class Task:
 
         return NAME
 
-    def _name(self, update, context):
+    def name(self, update, context):
         logger.info("Getting task's name")
-        self.task["name"] = update.message.text
-        update.message.reply_text('E qual seria o dia?')
 
-        return DATE
+        chat_id = update.message.chat.id
+        name = update.message.text
+
+        if len(name) > 0:
+            task_controller = self.TaskController(chat_id)
+            task_controller.set_name(name)
+
+            update.message.reply_text('E qual seria o dia?')
+
+            return DATE
+
+        update.message.reply_text('Você tem certeza que digitou um nome?')
 
     def _date(self, update, context):
         logger.info("Getting task's date")

@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+
 from config.logger import logger
 
 
@@ -6,6 +8,7 @@ class Config:
 
     def __init__(self):
         logger.info("Initializing configs")
+        load_dotenv()
 
     def get_token_bot(self):
         try:

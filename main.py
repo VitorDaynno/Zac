@@ -7,8 +7,9 @@ from controllers.routine import RoutineController
 from controllers.task import TaskController
 
 from helpers.dateHelper import DateHelper
+from helpers.redisHelper import RedisHelper
 from routes.general import General
-from routes.task import Task
+from routes.tasks.newTask import NewTask
 from routes.tasks.concludeTask import ConcludeTask
 from routes.routines.createRoutine import CreateRoutine
 from routine import Routine
@@ -44,7 +45,7 @@ def create_tasks():
 
     for routine in routines:
         try:
-            task_controller = TaskController(routine["userId"])
+            task_controller = TaskController(routine["userId"], RedisHelper())
 
             if day_of_week in routine["days"]:
                 routine_id = routine["_id"]
@@ -66,7 +67,7 @@ def main():
     logger.info('Initialize Zac')
     config = Config()
     general = General()
-    task = Task()
+    task = NewTask(RoutineController)
     create_routine = CreateRoutine()
     conclude_task = ConcludeTask()
 
