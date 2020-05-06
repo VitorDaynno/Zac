@@ -9,16 +9,17 @@ NAME, DATE, HOUR, BIO = range(4)
 
 class NewTask:
 
-    def __init__(self, TaskController):
+    def __init__(self, TaskController, RedisHelper):
         self.TaskController = TaskController
+        self.redis_helper = RedisHelper()
         self.conv_handler = ConversationHandler(
             entry_points=[CommandHandler('newTask', self.new_task)],
             states={
                 NAME: [MessageHandler(Filters.text, self.name)],
-                DATE: [MessageHandler(Filters.text, self.date)],
+                DATE: [MessageHandler(Filters.text, self._date)],
                 HOUR: [MessageHandler(Filters.text, self.hour)]
             },
-            fallbacks=[CommandHandler('cancel', self.cancel)]
+            fallbacks=[CommandHandler('cancel', self._cancel)]
         )
 
     @classmethod
@@ -29,50 +30,74 @@ class NewTask:
         return NAME
 
     def name(self, update, context):
-        logger.info("Getting task's name")
+        try:
+            logger.info("Getting task's name")
+            redis_helper = self.redis_helper
 
-        chat_id = update.message.chat.id
-        name = update.message.text
+            chat_id = update.message.chat.id
+            name = update.message.text
 
-        if len(name) > 0:
-            task_controller = self.TaskController(chat_id)
-            task_controller.set_name(name)
+            if len(name) > 0:
+                task_controller = self.TaskController(chat_id, redis_helper)
+                task_controller.set_name(name)
 
-            update.message.reply_text('E qual seria o dia?')
+                update.message.reply_text('E qual seria o dia?')
 
-            return DATE
+                return DATE
 
-        update.message.reply_text('Você tem certeza que digitou um nome?')
+            update.message.reply_text('Você tem certeza que digitou um nome?')
+        except Exception as error:
+            logger.error("An error occurred: {0}".format(error))
 
     def _date(self, update, context):
-        logger.info("Getting task's date")
-        task_date = update.message.text.lower().replace('ã', 'a')
-        if "hoje" in task_date:
-            task_date = date.today()
-            task_date = task_date.strftime("%d/%m/%Y")
-        elif "amanha" in task_date:
-            task_date = date.today() + timedelta(days=1)
-            task_date = task_date.strftime("%d/%m/%Y")
-        self.task["date"] = task_date
-        update.message.reply_text('Em qual horário?')
+        try:
+            logger.info("Getting task's date")
+            chat_id = update.message.chat.id
+            redis_helper = self.redis_helper
 
-        return HOUR
+            task_date = update.message.text.lower().replace('ã', 'a')
+            if "hoje" in task_date:
+                task_date = date.today()
+                task_date = task_date.strftime("%d/%m/%Y")
+            elif "amanha" in task_date:
+                task_date = date.today() + timedelta(days=1)
+                task_date = task_date.strftime("%d/%m/%Y")
 
-    def _hour(self, update, context):
-        logger.info("Getting task's hour")
-        self.task["hour"] = update.message.text
+            task_controller = self.TaskController(chat_id, redis_helper)
+            task_controller.set_date(task_date)
 
-        chat_id = update.message.chat.id
+            update.message.reply_text('Em qual horário?')
 
-        task = TaskController(chat_id)
-        task.save_task(self.task)
-        update.message.reply_text("Uhu!! A tarefa foi criada")
+            return HOUR
+        except ValueError:
+            update.message.reply_text("Essa não me parece uma data correta!")
+        except Exception as error:
+            logger.error("An error occurred: {0}".format(error))
+            update.message.reply_text("Algo de errado aconteceu :(")
+            return self._cancel(update, context)
 
-        return ConversationHandler.END
+    def hour(self, update, context):
+        try:
+            logger.info("Getting task's hour")
+            chat_id = update.message.chat.id
+            redis_helper = self.redis_helper
+            
+            hour = update.message.text
 
-    def cancel(self, update, context):
+            task = self.TaskController(chat_id, redis_helper)
+            task.save_task(hour)
+            update.message.reply_text("Uhu!! A tarefa foi criada")
+
+            return ConversationHandler.END
+        except ValueError:
+            update.message.reply_text("Esse não me parece um horário correto!")
+        except Exception as error:
+            logger.error("An error occurred: {0}".format(error))
+            update.message.reply_text("Algo de errado aconteceu :(")
+            return self._cancel(update, context)
+
+    def _cancel(self, update, context):
         logger.info("Cancelling the task")
-        self.task = {}
         update.message.reply_text("Sua tarefa foi cancelada :(")
 
         return ConversationHandler.END

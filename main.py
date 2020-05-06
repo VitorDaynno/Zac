@@ -67,7 +67,7 @@ def main():
     logger.info('Initialize Zac')
     config = Config()
     general = General()
-    task = NewTask(RoutineController)
+    task = NewTask(TaskController, RedisHelper)
     create_routine = CreateRoutine()
     conclude_task = ConcludeTask()
 

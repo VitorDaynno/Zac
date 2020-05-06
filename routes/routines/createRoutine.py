@@ -12,13 +12,13 @@ class CreateRoutine:
 
     def __init__(self):
         self.routine = {}
-        self.__telegram_helper = TelegramHelper()
-        self.__RoutineController = RoutineController
+        self._telegram_helper = TelegramHelper()
+        self._RoutineController = RoutineController
         self.conv_handler = ConversationHandler(
             entry_points=[CommandHandler('newRoutine', self.new_routine)],
             states={
-                NAME: [MessageHandler(Filters.text, self.__name)],
-                HOUR: [MessageHandler(Filters.text, self.__hour)]
+                NAME: [MessageHandler(Filters.text, self._name)],
+                HOUR: [MessageHandler(Filters.text, self._hour)]
             },
             fallbacks=[CommandHandler('cancel', self.cancel)]
         )
@@ -30,14 +30,14 @@ class CreateRoutine:
 
         return NAME
 
-    def __name(self, update, context):
+    def _name(self, update, context):
         try:
             logger.info("Getting routine's name")
 
             chat_id = update.message.chat.id
             name = update.message.text
 
-            routine_controller = self.__RoutineController(chat_id)
+            routine_controller = self._RoutineController(chat_id)
             routine_controller.set_name(name)
 
             buttons = [
@@ -51,7 +51,7 @@ class CreateRoutine:
                 {"text": "Continuar", "data": "OK"}
             ]
 
-            reply_markup = self.__telegram_helper.make_keyboard(
+            reply_markup = self._telegram_helper.make_keyboard(
                 "createRoutine§",
                 buttons
             )
@@ -63,19 +63,19 @@ class CreateRoutine:
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
 
-    def __hour(self, update, context):
+    def _hour(self, update, context):
         try:
             logger.info("Getting routine's hour")
 
             chat_id = update.message.chat.id
             hour = update.message.text
 
-            routine_controller = self.__RoutineController(chat_id)
+            routine_controller = self._RoutineController(chat_id)
             routine_controller.set_hour(hour)
 
             chat_id = update.message.chat.id
 
-            routine = self.__RoutineController(chat_id)
+            routine = self._RoutineController(chat_id)
             routine.save_routine(self.routine)
             routine.close_connection()
 
@@ -126,7 +126,7 @@ class CreateRoutine:
                     }
                     items.append(item)
 
-            reply_markup = self.__telegram_helper.make_keyboard("", items)
+            reply_markup = self._telegram_helper.make_keyboard("", items)
 
             query.edit_message_reply_markup(reply_markup=reply_markup)
         except Exception as error:
@@ -149,7 +149,7 @@ class CreateRoutine:
                 if "(" in text:
                     days.append(int(value))
 
-        routine_controller = self.__RoutineController(chat_id)
+        routine_controller = self._RoutineController(chat_id)
         routine_controller.set_days(days)
 
         query.message.reply_text("E qual seria o horário?")
