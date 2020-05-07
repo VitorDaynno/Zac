@@ -85,7 +85,7 @@ class NewTask:
             hour = update.message.text
 
             task = self.TaskController(chat_id, redis_helper)
-            task.save_task(hour)
+            task.create_task(hour)
             update.message.reply_text("Uhu!! A tarefa foi criada")
 
             return ConversationHandler.END

@@ -49,11 +49,14 @@ def create_tasks():
 
             if day_of_week in routine["days"]:
                 routine_id = routine["_id"]
+                date = date_helper.to_str_date(today)
+                hour = routine["hour"]
+                new_date = date_helper.concat_to_datetime(date, hour)
+
                 task = {}
 
                 task["name"] = routine["name"]
-                task["date"] = date_helper.to_str_date(today)
-                task["hour"] = routine["hour"]
+                task["date"] = date_helper.to_UTC(new_date)
 
                 task_controller.save_task(task)
 

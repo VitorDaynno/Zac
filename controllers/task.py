@@ -15,8 +15,17 @@ class TaskController:
         self._helper = DateHelper()
         self._redis = redis_helper
 
-    def save_task(self, time):
+    def save_task(self, task):
         logger.info("Saving task")
+
+        task["userId"] = self._user_id
+        task["isConclude"] = False
+
+        self._dao.save_task(task)
+        self.close_connection()
+
+    def create_task(self, time):
+        logger.info("Creating task")
         self.task = {}
 
         index = "createTask§{0}".format(self._user_id)
@@ -36,11 +45,8 @@ class TaskController:
 
         self.task["name"] = name
         self.task["date"] = self._helper.to_UTC(new_date)
-        self.task["userId"] = self._user_id
-        self.task["isConclude"] = False
 
-        self._dao.save_task(self.task)
-        self.close_connection()
+        self.save_task(self.task)
 
     def get_user_id(self):
         logger.info("Getting user_id")

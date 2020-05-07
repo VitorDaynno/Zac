@@ -65,5 +65,5 @@ class DateHelper:
         time = time.split(":")
 
         new_datetime = datetime(int(date[2]), int(date[1]), int(date[0]),
-            int(time[0]), int(time[1]), 0)
+                                int(time[0]), int(time[1]), 0)
         return new_datetime
