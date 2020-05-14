@@ -81,7 +81,7 @@ class NewTask:
             logger.info("Getting task's hour")
             chat_id = update.message.chat.id
             redis_helper = self.redis_helper
-            
+
             hour = update.message.text
 
             task = self.TaskController(chat_id, redis_helper)
