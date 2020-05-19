@@ -105,6 +105,7 @@ class NewTask:
             update.message.reply_text("Algo de errado aconteceu :(")
             return self._cancel(update, context)
 
+    @classmethod
     def _cancel(self, update, context):
         logger.info("Cancelling the task")
         update.message.reply_text("Sua tarefa foi cancelada :(")
