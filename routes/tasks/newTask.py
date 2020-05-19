@@ -15,9 +15,18 @@ class NewTask:
         self.conv_handler = ConversationHandler(
             entry_points=[CommandHandler('newTask', self.new_task)],
             states={
-                NAME: [MessageHandler(Filters.text, self.name)],
-                DATE: [MessageHandler(Filters.text, self._date)],
-                HOUR: [MessageHandler(Filters.text, self.hour)]
+                NAME: [MessageHandler(
+                    Filters.text & (~ Filters.command),
+                    self.name
+                )],
+                DATE: [MessageHandler(
+                    Filters.text & (~ Filters.command),
+                    self._date
+                )],
+                HOUR: [MessageHandler(
+                    Filters.text & (~ Filters.command),
+                    self.hour
+                )]
             },
             fallbacks=[CommandHandler('cancel', self._cancel)]
         )

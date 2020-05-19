@@ -17,8 +17,14 @@ class CreateRoutine:
         self.conv_handler = ConversationHandler(
             entry_points=[CommandHandler('newRoutine', self.new_routine)],
             states={
-                NAME: [MessageHandler(Filters.text, self._name)],
-                HOUR: [MessageHandler(Filters.text, self._hour)]
+                NAME: [MessageHandler(
+                    Filters.text & (~ Filters.command),
+                    self._name
+                )],
+                HOUR: [MessageHandler(
+                    Filters.text & (~ Filters.command),
+                    self._hour
+                )]
             },
             fallbacks=[CommandHandler('cancel', self.cancel)]
         )

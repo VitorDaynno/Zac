@@ -1,4 +1,3 @@
-from datetime import datetime
 import json
 
 from daos.taskDAO import TaskDAO
@@ -80,7 +79,7 @@ class TaskController:
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
             raise error
-    
+
     def set_date(self, date):
         try:
             logger.info("Setting date {0}".format(date))
