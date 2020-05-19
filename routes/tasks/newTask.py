@@ -10,14 +10,14 @@ NAME, DATE, HOUR, BIO = range(4)
 class NewTask:
 
     def __init__(self, TaskController, RedisHelper):
-        self.TaskController = TaskController
-        self.redis_helper = RedisHelper()
-        self.conv_handler = ConversationHandler(
-            entry_points=[CommandHandler('newTask', self.new_task)],
+        self._TaskController = TaskController
+        self._redis_helper = RedisHelper()
+        self._conv_handler = ConversationHandler(
+            entry_points=[CommandHandler('newTask', self._new_task)],
             states={
                 NAME: [MessageHandler(
                     Filters.text & (~ Filters.command),
-                    self.name
+                    self._name
                 )],
                 DATE: [MessageHandler(
                     Filters.text & (~ Filters.command),
@@ -25,29 +25,29 @@ class NewTask:
                 )],
                 HOUR: [MessageHandler(
                     Filters.text & (~ Filters.command),
-                    self.hour
+                    self._hour
                 )]
             },
             fallbacks=[CommandHandler('cancel', self._cancel)]
         )
 
     @classmethod
-    def new_task(self, update, context):
+    def _new_task(self, update, context):
         logger.info("Initialize a new task")
         update.message.reply_text('Opa! Uma nova tarefa, qual o nome dela?')
 
         return NAME
 
-    def name(self, update, context):
+    def _name(self, update, context):
         try:
             logger.info("Getting task's name")
-            redis_helper = self.redis_helper
+            redis_helper = self._redis_helper
 
             chat_id = update.message.chat.id
             name = update.message.text
 
             if len(name) > 0:
-                task_controller = self.TaskController(chat_id, redis_helper)
+                task_controller = self._TaskController(chat_id, redis_helper)
                 task_controller.set_name(name)
 
                 update.message.reply_text('E qual seria o dia?')
@@ -62,7 +62,7 @@ class NewTask:
         try:
             logger.info("Getting task's date")
             chat_id = update.message.chat.id
-            redis_helper = self.redis_helper
+            redis_helper = self._redis_helper
 
             task_date = update.message.text.lower().replace('ã', 'a')
             if "hoje" in task_date:
@@ -72,7 +72,7 @@ class NewTask:
                 task_date = date.today() + timedelta(days=1)
                 task_date = task_date.strftime("%d/%m/%Y")
 
-            task_controller = self.TaskController(chat_id, redis_helper)
+            task_controller = self._TaskController(chat_id, redis_helper)
             task_controller.set_date(task_date)
 
             update.message.reply_text('Em qual horário?')
@@ -85,15 +85,15 @@ class NewTask:
             update.message.reply_text("Algo de errado aconteceu :(")
             return self._cancel(update, context)
 
-    def hour(self, update, context):
+    def _hour(self, update, context):
         try:
             logger.info("Getting task's hour")
             chat_id = update.message.chat.id
-            redis_helper = self.redis_helper
+            redis_helper = self._redis_helper
 
             hour = update.message.text
 
-            task = self.TaskController(chat_id, redis_helper)
+            task = self._TaskController(chat_id, redis_helper)
             task.create_task(hour)
             update.message.reply_text("Uhu!! A tarefa foi criada")
 
@@ -113,4 +113,4 @@ class NewTask:
         return ConversationHandler.END
 
     def get_conv_handler(self):
-        return self.conv_handler
+        return self._conv_handler
