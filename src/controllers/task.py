@@ -1,8 +1,8 @@
 import json
 
-from daos.taskDAO import TaskDAO
-from config.logger import logger
-from helpers.dateHelper import DateHelper
+from src.daos.taskDAO import TaskDAO
+from src.config.logger import logger
+from src.helpers.dateHelper import DateHelper
 
 
 class TaskController:

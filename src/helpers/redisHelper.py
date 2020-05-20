@@ -1,7 +1,7 @@
 from redis import Redis
 
-from config.logger import logger
-from config.config import Config
+from src.config.logger import logger
+from src.config.config import Config
 
 
 class RedisHelper:

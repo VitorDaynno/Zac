@@ -1,8 +1,8 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from config.logger import logger
-from controllers.task import TaskController
-from helpers.dateHelper import DateHelper
+from src.config.logger import logger
+from src.controllers.task import TaskController
+from src.helpers.dateHelper import DateHelper
 
 
 class ConcludeTask:

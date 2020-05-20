@@ -1,8 +1,8 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
-from config.config import Config
-from config.logger import logger
+from src.config.config import Config
+from src.config.logger import logger
 
 
 class TaskDAO:

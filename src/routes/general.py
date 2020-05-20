@@ -1,5 +1,5 @@
-from config.logger import logger
-from controllers.user import UserController
+from src.config.logger import logger
+from src.controllers.user import UserController
 
 
 class General:

@@ -1,7 +1,7 @@
-from daos.routineDAO import RoutineDAO
-from config.logger import logger
-from helpers.dateHelper import DateHelper
-from helpers.redisHelper import RedisHelper
+from src.daos.routineDAO import RoutineDAO
+from src.config.logger import logger
+from src.helpers.dateHelper import DateHelper
+from src.helpers.redisHelper import RedisHelper
 
 import json
 

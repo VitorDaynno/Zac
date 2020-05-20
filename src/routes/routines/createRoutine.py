@@ -1,9 +1,9 @@
 from telegram.ext import (CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
 
-from config.logger import logger
-from helpers.telegramHelper import TelegramHelper
-from controllers.routine import RoutineController
+from src.config.logger import logger
+from src.helpers.telegramHelper import TelegramHelper
+from src.controllers.routine import RoutineController
 
 NAME, DAYS, HOUR, BIO = range(4)
 

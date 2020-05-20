@@ -1,19 +1,19 @@
 from telegram.ext import Updater, CommandHandler
 
-from config.logger import logger
-from config.config import Config
+from src.config.logger import logger
+from src.config.config import Config
 
-from controllers.routine import RoutineController
-from controllers.task import TaskController
+from src.controllers.routine import RoutineController
+from src.controllers.task import TaskController
 
-from helpers.dateHelper import DateHelper
-from helpers.redisHelper import RedisHelper
-from routes.general import General
-from routes.tasks.newTask import NewTask
-from routes.tasks.concludeTask import ConcludeTask
-from routes.routines.createRoutine import CreateRoutine
-from routine import Routine
-from routes import set_routes
+from src.helpers.dateHelper import DateHelper
+from src.helpers.redisHelper import RedisHelper
+from src.routes.general import General
+from src.routes.tasks.newTask import NewTask
+from src.routes.tasks.concludeTask import ConcludeTask
+from src.routes.routines.createRoutine import CreateRoutine
+from src.routine import Routine
+from src.routes import set_routes
 
 
 def create_tasks():

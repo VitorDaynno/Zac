@@ -2,7 +2,7 @@ from telegram.ext import (CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
 from datetime import date, timedelta
 
-from config.logger import logger
+from src.config.logger import logger
 
 NAME, DATE, HOUR, BIO = range(4)
 

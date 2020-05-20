@@ -1,10 +1,10 @@
 import threading
 from datetime import datetime
-from helpers.threadJob import ThreadJob
 
-from controllers.task import TaskController
-from controllers.user import UserController
-from helpers.redisHelper import RedisHelper
+from src.helpers.threadJob import ThreadJob
+from src.controllers.task import TaskController
+from src.controllers.user import UserController
+from src.helpers.redisHelper import RedisHelper
 
 
 class Routine:

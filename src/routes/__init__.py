@@ -1,8 +1,8 @@
 from telegram.ext import CallbackQueryHandler
 
-from config.logger import logger
-from routes.tasks.concludeTask import ConcludeTask
-from routes.routines.createRoutine import CreateRoutine
+from src.config.logger import logger
+from src.routes.tasks.concludeTask import ConcludeTask
+from src.routes.routines.createRoutine import CreateRoutine
 
 
 def set_routes(bot):

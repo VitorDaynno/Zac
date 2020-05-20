@@ -1,5 +1,5 @@
-from daos.userDAO import UserDAO
-from config.config import Config
+from src.daos.userDAO import UserDAO
+from src.config.config import Config
 
 
 class UserController:
