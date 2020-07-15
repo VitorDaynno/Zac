@@ -15,7 +15,7 @@ class CreateRoutine:
         self._telegram_helper = TelegramHelper()
         self._RoutineController = RoutineController
         self.conv_handler = ConversationHandler(
-            entry_points=[CommandHandler('newRoutine', self.new_routine)],
+            entry_points=[CommandHandler('newRoutine', self._new_routine)],
             states={
                 NAME: [MessageHandler(
                     Filters.text & (~ Filters.command),
@@ -30,7 +30,7 @@ class CreateRoutine:
         )
 
     @classmethod
-    def new_routine(self, update, context):
+    def _new_routine(self, update, context):
         logger.info("Initialize a new routine")
         update.message.reply_text('Opa! Uma nova rotina, qual o nome dela?')
 
@@ -43,7 +43,7 @@ class CreateRoutine:
             chat_id = update.message.chat.id
             name = update.message.text
 
-            routine_controller = self._RoutineController(chat_id)
+            routine_controller = RoutineController(chat_id)
             routine_controller.set_name(name)
 
             buttons = [
@@ -111,7 +111,7 @@ class CreateRoutine:
             clicked = query.data.split("§")[1]
 
             if clicked == "OK":
-                return self.__confirm_days(update)
+                return self._confirm_days(update)
 
             items = []
 
@@ -138,7 +138,7 @@ class CreateRoutine:
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
 
-    def __confirm_days(self, update):
+    def _confirm_days(self, update):
         logger.info("Started confirm days")
 
         query = update.callback_query

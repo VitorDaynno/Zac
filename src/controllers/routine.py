@@ -1,28 +1,33 @@
 from src.daos.routineDAO import RoutineDAO
 from src.config.logger import logger
 from src.helpers.dateHelper import DateHelper
-from src.helpers.redisHelper import RedisHelper
 
 import json
 
 
 class RoutineController:
 
-    def __init__(self, user_id):
+    def __init__(self, user_id, redis_helper):
         logger.info("Initialize RoutineController")
         self._user_id = user_id
         self._dao = RoutineDAO()
         self._helper = DateHelper()
-        self._redis = RedisHelper()
+        self._redis = redis_helper
 
     def set_name(self, name):
         try:
             logger.info("Setting name {0}".format(name))
 
+            if name is None:
+                raise Exception("Name is required")
+
+            if name == "":
+                raise Exception("Name should not be empty")
+
             index = "createRoutine§{0}".format(self._user_id)
             value = json.dumps({"name": name})
 
-            self._redis.set_value(index, value)
+            r = self._redis.set_value(index, value)
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
             raise error
