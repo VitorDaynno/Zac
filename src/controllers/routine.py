@@ -27,7 +27,8 @@ class RoutineController:
             index = "createRoutine§{0}".format(self._user_id)
             value = json.dumps({"name": name})
 
-            r = self._redis.set_value(index, value)
+            self._redis.set_value(index, value)
+            return "{} set successfully".format(name)
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
             raise error

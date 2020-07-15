@@ -1,5 +1,7 @@
 import unittest
 
+from unittest.mock import MagicMock
+
 from src.controllers.routine import RoutineController
 from src.helpers.redisHelper import RedisHelper
 
@@ -27,5 +29,10 @@ class RoutineControllerTest(unittest.TestCase):
     def test_set_name_with_name(self):
         redis_helper = RedisHelper()
         routineController = RoutineController(None, redis_helper)
-        routineController.set_name("Test")
-        self.fail()
+
+        magicMock = MagicMock(return_value=True)
+        redis_helper.set_value = magicMock
+
+        r = routineController.set_name("Test")
+
+        self.assertEqual(r, "Test set successfully")
