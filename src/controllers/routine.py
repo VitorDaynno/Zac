@@ -7,11 +7,11 @@ import json
 
 class RoutineController:
 
-    def __init__(self, user_id, redis_helper):
+    def __init__(self, user_id, redis_helper, date_helper):
         logger.info("Initialize RoutineController")
         self._user_id = user_id
         self._dao = RoutineDAO()
-        self._helper = DateHelper()
+        self._date_helper = date_helper
         self._redis = redis_helper
 
     def set_name(self, name):
@@ -39,7 +39,7 @@ class RoutineController:
 
             index = "createRoutine§{0}".format(self._user_id)
 
-            is_valid = self._helper.is_valid_time(hour)
+            is_valid = self._date_helper.is_valid_time(hour)
 
             if not is_valid:
                 raise Exception("Time is invalid")
