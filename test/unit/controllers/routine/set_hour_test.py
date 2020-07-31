@@ -12,41 +12,58 @@ class SetHourTest(unittest.TestCase):
     def setUp(self):
         self.redis_helper = RedisHelper()
         self.date_helper = DateHelper()
+
+        self.is_valid_time_mock = MagicMock()
         self.set_value_mock = MagicMock()
+        self.get_value_mock = MagicMock()
+
+        self.date_helper.is_valid_time = self.is_valid_time_mock
         self.redis_helper.set_value = self.set_value_mock
+        self.redis_helper.get_value = self.get_value_mock
+
+        self.routineController = RoutineController(
+            2,
+            self.redis_helper,
+            self.date_helper
+        )
 
     def test_set_hour_without_hour(self):
         try:
-            routineController = RoutineController(
-                None, self.redis_helper,
-                self.date_helper
-            )
+            self.is_valid_time_mock.return_value = False
 
-            routineController.set_hour(None)
+            self.routineController.set_hour(None)
             self.fail()
         except Exception as error:
-            self.assertEqual(error.args[0], "Name is required")
+            self.assertEqual(error.args[0], "Time is invalid")
+            self.is_valid_time_mock.assert_called_once()
+            self.is_valid_time_mock.assert_called_with(None)
             self.set_value_mock.assert_not_called()
 
-    # def test_set_name_with_empty_name(self):
-    #     try:
-    #         routineController = RoutineController(None, self.redis_helper)
-    #         routineController.set_name("")
-    #         self.fail()
-    #     except Exception as error:
-    #         self.assertEqual(error.args[0], "Name should not be empty")
-    #         self.set_value_mock.assert_not_called()
+    def test_set_hour_with_empty_string(self):
+        try:
+            self.is_valid_time_mock.return_value = False
 
-    # def test_set_name_with_name_but_failed(self):
-    #     try:
-    #         routineController = RoutineController(1, self.redis_helper)
-    #         self.set_value_mock.side_effect = Exception('Error')
-    #         routineController.set_name("Test")
-    #         self.fail()
-    #     except Exception as error:
-    #         self.assertEqual(error.args[0], "Error")
-    #         self.set_value_mock.assert_called_with(
-    #             "createRoutine§1", '{"name": "Test"}')
+            self.routineController.set_hour("")
+            self.fail()
+        except Exception as error:
+            self.assertEqual(error.args[0], "Time is invalid")
+            self.is_valid_time_mock.assert_called_once()
+            self.is_valid_time_mock.assert_called_with("")
+            self.set_value_mock.assert_not_called()
+
+    def test_set_hour_but_get_redis_failed(self):
+        try:
+            self.is_valid_time_mock.return_value = True
+            self.get_value_mock.side_effect = Exception('Error')
+
+            self.routineController.set_hour("00:04")
+            self.fail()
+        except Exception as error:
+            print
+            self.assertEqual(error.args[0], "Error")
+            self.is_valid_time_mock.assert_called_once()
+            self.set_value_mock.assert_called_with(
+                "createRoutine§1", '{"name": "Test"}')
 
     # def test_set_name_with_name(self):
     #     routineController = RoutineController(1, self.redis_helper)
