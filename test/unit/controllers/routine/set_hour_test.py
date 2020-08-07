@@ -37,6 +37,7 @@ class SetHourTest(unittest.TestCase):
             self.assertEqual(error.args[0], "Time is invalid")
             self.is_valid_time_mock.assert_called_once()
             self.is_valid_time_mock.assert_called_with(None)
+            self.get_value_mock.assert_not_called()
             self.set_value_mock.assert_not_called()
 
     def test_set_hour_with_empty_string(self):
@@ -49,6 +50,7 @@ class SetHourTest(unittest.TestCase):
             self.assertEqual(error.args[0], "Time is invalid")
             self.is_valid_time_mock.assert_called_once()
             self.is_valid_time_mock.assert_called_with("")
+            self.get_value_mock.assert_not_called()
             self.set_value_mock.assert_not_called()
 
     def test_set_hour_but_get_redis_failed(self):
@@ -59,19 +61,44 @@ class SetHourTest(unittest.TestCase):
             self.routineController.set_hour("00:04")
             self.fail()
         except Exception as error:
-            print
             self.assertEqual(error.args[0], "Error")
             self.is_valid_time_mock.assert_called_once()
+            self.get_value_mock.assert_called_once()
+            self.get_value_mock.assert_called_with("createRoutine§2")
+            self.set_value_mock.assert_not_called()
+
+    def test_set_hour_but_set_redis_failed(self):
+        try:
+            self.is_valid_time_mock.return_value = True
+            self.get_value_mock.return_value = '{"name": "test"}'
+            self.set_value_mock.side_effect = Exception('Error')
+
+            self.routineController.set_hour("00:04")
+            self.fail()
+        except Exception as error:
+            self.assertEqual(error.args[0], "Error")
+            self.is_valid_time_mock.assert_called_once()
+            self.get_value_mock.assert_called_once()
+            self.get_value_mock.assert_called_with("createRoutine§2")
+            self.set_value_mock.assert_called_once()
             self.set_value_mock.assert_called_with(
-                "createRoutine§1", '{"name": "Test"}')
+                "createRoutine§2",
+                '{"name": "test", "hour": "00:04"}'
+            )
 
-    # def test_set_name_with_name(self):
-    #     routineController = RoutineController(1, self.redis_helper)
-    #     self.set_value_mock.return_value = True
+    def test_set_hour_with_hour(self):
+        self.is_valid_time_mock.return_value = True
+        self.get_value_mock.return_value = '{"name": "test"}'
+        self.set_value_mock.return_value = True
 
-    #     r = routineController.set_name("Test")
+        r = self.routineController.set_hour("22:43")
 
-    #     self.assertEqual(r, "Test set successfully")
-    #     self.set_value_mock.assert_called_once()
-    #     self.set_value_mock.assert_called_with(
-    #         "createRoutine§1", '{"name": "Test"}')
+        self.assertEqual(r, "22:43 set successfully")
+        self.is_valid_time_mock.assert_called_once()
+        self.get_value_mock.assert_called_once()
+        self.get_value_mock.assert_called_with("createRoutine§2")
+        self.set_value_mock.assert_called_once()
+        self.set_value_mock.assert_called_with(
+            "createRoutine§2",
+            '{"name": "test", "hour": "22:43"}'
+        )

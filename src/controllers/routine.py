@@ -1,6 +1,5 @@
 from src.daos.routineDAO import RoutineDAO
 from src.config.logger import logger
-from src.helpers.dateHelper import DateHelper
 
 import json
 
@@ -50,6 +49,7 @@ class RoutineController:
             value = json.dumps(routine)
 
             self._redis.set_value(index, value)
+            return "{} set successfully".format(hour)
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
             raise error
