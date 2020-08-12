@@ -1,7 +1,8 @@
 from pymongo import MongoClient
-from config.config import Config
-from config.logger import logger
 import datetime
+
+from src.config.config import Config
+from src.config.logger import logger
 
 
 class UserDAO:

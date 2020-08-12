@@ -1,8 +1,8 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from config.logger import logger
-from controllers.task import TaskController
-from helpers.dateHelper import DateHelper
+from src.config.logger import logger
+from src.controllers.task import TaskController
+from src.helpers.dateHelper import DateHelper
 
 
 class ConcludeTask:
@@ -15,7 +15,7 @@ class ConcludeTask:
             logger.info('initiating /concludeTasks')
 
             chat_id = update.message.chat.id
-            taskController = TaskController(chat_id)
+            taskController = TaskController(chat_id, None)
             initial_date = self.__date_helper.initial_date()
             final_date = self.__date_helper.final_date()
             search_filter = {
@@ -47,7 +47,7 @@ class ConcludeTask:
     @classmethod
     def conclude_task(self, update, context):
         try:
-            task_controller = TaskController(None)
+            task_controller = TaskController(None, None)
             query = update.callback_query
             data = query.data
 

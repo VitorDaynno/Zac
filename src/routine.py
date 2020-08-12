@@ -1,9 +1,10 @@
 import threading
 from datetime import datetime
-from helpers.threadJob import ThreadJob
 
-from controllers.task import TaskController
-from controllers.user import UserController
+from src.helpers.threadJob import ThreadJob
+from src.controllers.task import TaskController
+from src.controllers.user import UserController
+from src.helpers.redisHelper import RedisHelper
 
 
 class Routine:
@@ -24,7 +25,7 @@ class Routine:
         user_controller = UserController(None)
         users = user_controller.get_users()
         for user in users:
-            task_controller = TaskController(user['chat_id'])
+            task_controller = TaskController(user['chat_id'], RedisHelper())
             now = datetime.utcnow()
             initial_date = datetime(now.year, now.month, now.day, now.hour,
                                     now.minute, 0)

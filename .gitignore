@@ -1,4 +1,5 @@
 *.pyc
-watchgod_conf.py
+watch_dev.py
 .vscode
 data/
+*.env

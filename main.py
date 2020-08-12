@@ -1,18 +1,19 @@
 from telegram.ext import Updater, CommandHandler
 
-from config.logger import logger
-from config.config import Config
+from src.config.logger import logger
+from src.config.config import Config
 
-from controllers.routine import RoutineController
-from controllers.task import TaskController
+from src.controllers.routine import RoutineController
+from src.controllers.task import TaskController
 
-from helpers.dateHelper import DateHelper
-from routes.general import General
-from routes.task import Task
-from routes.tasks.concludeTask import ConcludeTask
-from routes.routines.createRoutine import CreateRoutine
-from routine import Routine
-from routes import set_routes
+from src.helpers.dateHelper import DateHelper
+from src.helpers.redisHelper import RedisHelper
+from src.routes.general import General
+from src.routes.tasks.newTask import NewTask
+from src.routes.tasks.concludeTask import ConcludeTask
+from src.routes.routines.createRoutine import CreateRoutine
+from src.routine import Routine
+from src.routes import set_routes
 
 
 def create_tasks():
@@ -44,15 +45,18 @@ def create_tasks():
 
     for routine in routines:
         try:
-            task_controller = TaskController(routine["userId"])
+            task_controller = TaskController(routine["userId"], RedisHelper())
 
             if day_of_week in routine["days"]:
                 routine_id = routine["_id"]
+                date = date_helper.to_str_date(today)
+                hour = routine["hour"]
+                new_date = date_helper.concat_to_datetime(date, hour)
+
                 task = {}
 
                 task["name"] = routine["name"]
-                task["date"] = date_helper.to_str_date(today)
-                task["hour"] = routine["hour"]
+                task["date"] = date_helper.to_UTC(new_date)
 
                 task_controller.save_task(task)
 
@@ -66,7 +70,7 @@ def main():
     logger.info('Initialize Zac')
     config = Config()
     general = General()
-    task = Task()
+    task = NewTask(TaskController, RedisHelper)
     create_routine = CreateRoutine()
     conclude_task = ConcludeTask()
 

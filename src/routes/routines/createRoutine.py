@@ -1,9 +1,9 @@
 from telegram.ext import (CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
 
-from config.logger import logger
-from helpers.telegramHelper import TelegramHelper
-from controllers.routine import RoutineController
+from src.config.logger import logger
+from src.helpers.telegramHelper import TelegramHelper
+from src.controllers.routine import RoutineController
 
 NAME, DAYS, HOUR, BIO = range(4)
 
@@ -12,32 +12,38 @@ class CreateRoutine:
 
     def __init__(self):
         self.routine = {}
-        self.__telegram_helper = TelegramHelper()
-        self.__RoutineController = RoutineController
+        self._telegram_helper = TelegramHelper()
+        self._RoutineController = RoutineController
         self.conv_handler = ConversationHandler(
-            entry_points=[CommandHandler('newRoutine', self.new_routine)],
+            entry_points=[CommandHandler('newRoutine', self._new_routine)],
             states={
-                NAME: [MessageHandler(Filters.text, self.__name)],
-                HOUR: [MessageHandler(Filters.text, self.__hour)]
+                NAME: [MessageHandler(
+                    Filters.text & (~ Filters.command),
+                    self._name
+                )],
+                HOUR: [MessageHandler(
+                    Filters.text & (~ Filters.command),
+                    self._hour
+                )]
             },
             fallbacks=[CommandHandler('cancel', self.cancel)]
         )
 
     @classmethod
-    def new_routine(self, update, context):
+    def _new_routine(self, update, context):
         logger.info("Initialize a new routine")
         update.message.reply_text('Opa! Uma nova rotina, qual o nome dela?')
 
         return NAME
 
-    def __name(self, update, context):
+    def _name(self, update, context):
         try:
             logger.info("Getting routine's name")
 
             chat_id = update.message.chat.id
             name = update.message.text
 
-            routine_controller = self.__RoutineController(chat_id)
+            routine_controller = RoutineController(chat_id)
             routine_controller.set_name(name)
 
             buttons = [
@@ -51,7 +57,7 @@ class CreateRoutine:
                 {"text": "Continuar", "data": "OK"}
             ]
 
-            reply_markup = self.__telegram_helper.make_keyboard(
+            reply_markup = self._telegram_helper.make_keyboard(
                 "createRoutine§",
                 buttons
             )
@@ -63,19 +69,19 @@ class CreateRoutine:
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
 
-    def __hour(self, update, context):
+    def _hour(self, update, context):
         try:
             logger.info("Getting routine's hour")
 
             chat_id = update.message.chat.id
             hour = update.message.text
 
-            routine_controller = self.__RoutineController(chat_id)
+            routine_controller = self._RoutineController(chat_id)
             routine_controller.set_hour(hour)
 
             chat_id = update.message.chat.id
 
-            routine = self.__RoutineController(chat_id)
+            routine = self._RoutineController(chat_id)
             routine.save_routine(self.routine)
             routine.close_connection()
 
@@ -105,7 +111,7 @@ class CreateRoutine:
             clicked = query.data.split("§")[1]
 
             if clicked == "OK":
-                return self.__confirm_days(update)
+                return self._confirm_days(update)
 
             items = []
 
@@ -126,13 +132,13 @@ class CreateRoutine:
                     }
                     items.append(item)
 
-            reply_markup = self.__telegram_helper.make_keyboard("", items)
+            reply_markup = self._telegram_helper.make_keyboard("", items)
 
             query.edit_message_reply_markup(reply_markup=reply_markup)
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
 
-    def __confirm_days(self, update):
+    def _confirm_days(self, update):
         logger.info("Started confirm days")
 
         query = update.callback_query
@@ -149,7 +155,7 @@ class CreateRoutine:
                 if "(" in text:
                     days.append(int(value))
 
-        routine_controller = self.__RoutineController(chat_id)
+        routine_controller = self._RoutineController(chat_id)
         routine_controller.set_days(days)
 
         query.message.reply_text("E qual seria o horário?")
