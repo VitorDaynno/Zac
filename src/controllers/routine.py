@@ -65,6 +65,7 @@ class RoutineController:
             value = json.dumps(routine)
 
             self._redis.set_value(index, value)
+            return "days set successfully"
         except Exception as error:
             logger.error("An error occurred: {0}".format(error))
             raise error

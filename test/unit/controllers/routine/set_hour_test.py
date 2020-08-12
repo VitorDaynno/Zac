@@ -70,7 +70,7 @@ class SetHourTest(unittest.TestCase):
     def test_set_hour_but_set_redis_failed(self):
         try:
             self.is_valid_time_mock.return_value = True
-            self.get_value_mock.return_value = '{"name": "test"}'
+            self.get_value_mock.return_value = '{"name": "test", "days": [0, 2]}'
             self.set_value_mock.side_effect = Exception('Error')
 
             self.routineController.set_hour("00:04")
@@ -83,12 +83,12 @@ class SetHourTest(unittest.TestCase):
             self.set_value_mock.assert_called_once()
             self.set_value_mock.assert_called_with(
                 "createRoutine§2",
-                '{"name": "test", "hour": "00:04"}'
+                '{"name": "test", "days": [0, 2], "hour": "00:04"}'
             )
 
     def test_set_hour_with_hour(self):
         self.is_valid_time_mock.return_value = True
-        self.get_value_mock.return_value = '{"name": "test"}'
+        self.get_value_mock.return_value = '{"name": "test", "days": [3, 4]}'
         self.set_value_mock.return_value = True
 
         r = self.routineController.set_hour("22:43")
@@ -100,5 +100,5 @@ class SetHourTest(unittest.TestCase):
         self.set_value_mock.assert_called_once()
         self.set_value_mock.assert_called_with(
             "createRoutine§2",
-            '{"name": "test", "hour": "22:43"}'
+            '{"name": "test", "days": [3, 4], "hour": "22:43"}'
         )
