@@ -45,6 +45,7 @@ def create_tasks():
     for routine in routines:
         try:
             task_controller = TaskController(routine["userId"])
+            now = date_helper.get_now()
 
             if day_of_week in routine["days"]:
                 routine_id = routine["_id"]
@@ -56,7 +57,7 @@ def create_tasks():
 
                 task_controller.save_task(task)
 
-                routine_controller.update_last_created_date(routine_id, today)
+                routine_controller.update_last_created_date(routine_id, now)
                 routine_controller.close_connection()
         except Exception as error:
             logger.info("An error occurred: {0}".format(error))
