@@ -31,6 +31,10 @@ class DateHelper:
         local_datetime = datetime.now(local_timezone)
         return local_datetime
 
+    def get_now(self):
+        now = datetime.now()
+        return now
+
     @staticmethod
     def get_timezone():
         return timezone("America/Sao_Paulo")
