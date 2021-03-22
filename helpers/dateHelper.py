@@ -32,7 +32,7 @@ class DateHelper:
         return local_datetime
 
     def get_now(self):
-        now = datetime.now()
+        now = self.get_local_now()
         return now
 
     @staticmethod
