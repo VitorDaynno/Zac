@@ -1,11 +1,12 @@
 certifi==2019.11.28
 cffi==1.14.0
-cryptography==2.8
+cryptography==3.2
 decorator==4.4.1
 future==0.18.2
 pycparser==2.19
 pymongo==3.10.1
 python-telegram-bot==12.4.2
+python-dotenv==0.16.0
 pytz==2019.3
 redis==3.4.1
 six==1.14.0

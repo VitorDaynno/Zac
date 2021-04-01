@@ -41,13 +41,13 @@ class CreateRoutine:
             routine_controller.set_name(name)
 
             buttons = [
-                {"text": 'DOM', "data": 6},
-                {"text": 'SEG', "data": 0},
-                {"text": 'TER', "data": 1},
-                {"text": 'QUA', "data": 2},
-                {"text": 'QUI', "data": 3},
-                {"text": 'SEX', "data": 4},
-                {"text": 'SAB', "data": 5},
+                {"text": 'DOM', "data": 0},
+                {"text": 'SEG', "data": 1},
+                {"text": 'TER', "data": 2},
+                {"text": 'QUA', "data": 3},
+                {"text": 'QUI', "data": 4},
+                {"text": 'SEX', "data": 5},
+                {"text": 'SAB', "data": 6},
                 {"text": "Continuar", "data": "OK"}
             ]
 
